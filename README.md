@@ -8,7 +8,8 @@ Desktop only (macOS, Linux, Windows).
 
 ## Features
 
-- **Every terminal is a regular Obsidian tab**, titled `Local`, `Local (2)`… The first one opens at the bottom, below the editor; further ones open as tabs next to it. Tabs can be dragged, split and pinned like any other.
+- **Every terminal is a regular Obsidian tab**, titled `Local`, `Local (2)`… Open a new tab (`+` or ⌘T / Ctrl+T) and choose **Open terminal**, then drag it anywhere: next to a note, into a split or a sidebar. Tabs can be split and pinned like any other.
+- *Toggle terminal* opens the first terminal at the bottom, below the editor; further ones open as tabs next to it.
 - **Shell profiles** — zsh, bash, fish, PowerShell, Git Bash, WSL… are detected automatically; add your own for any command, e.g. [Claude Code](#example-claude-code).
 - Starts in the **vault folder**, the active file's folder or a custom one. In the file explorer: right-click → **Open in Terminal**.
 - A real PTY: `vim`, `htop`, `less`, `git log`, 24-bit colour, resizing, Ctrl+C.
@@ -50,9 +51,17 @@ The login shell (`-l`) loads your `PATH`, so `claude` is found; if it isn't, use
 
 Make it the default profile and the terminal opens straight into Claude Code. The same works for any other CLI tool.
 
+## Settings
+
+| Group | What you can change |
+|---|---|
+| Shell | Default profile, shell profiles, Python executable, extra environment variables |
+| Behaviour | Where the first terminal opens (bottom, right sidebar, new tab), start folder (vault root, active file's folder, custom), close the tab when the shell exits, copy on select, terminal takes over Obsidian hotkeys, clickable vault file paths, Option as Meta (macOS) |
+| Appearance | Colour scheme (follow Obsidian, Dark, Light), font family and size, line height, cursor style and blinking, view header, scrollback lines |
+
 ## Hotkeys
 
-The plugin sets no Obsidian hotkeys. Assign one to **Vault Terminal: Toggle terminal** in *Settings → Hotkeys*, e.g. Alt+F12.
+The plugin sets no Obsidian hotkeys. Assign one to **Vault Terminal: Toggle terminal** in *Settings → Hotkeys*, e.g. Alt+F12. Without a hotkey, open a new tab and choose **Open terminal**, or use the command palette.
 
 Inside the terminal:
 
