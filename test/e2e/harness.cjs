@@ -168,7 +168,7 @@ async function test(name, fn) {
 }
 const assert = (c, m) => { if (!c) throw new Error(m || 'assertion failed'); };
 const screenText = (s) => { const b = s.term.buffer.active; const out = []; for (let i = 0; i < b.length; i++) out.push(b.getLine(i).translateToString(true)); return out.join('\n'); };
-const terminals = () => app.workspace.getLeavesOfType('vault-terminal-view');
+const terminals = () => app.workspace.getLeavesOfType('terminal-tabs-view');
 const titles = (group) => group.children.map((l) => l.tabHeaderInnerTitleEl.textContent);
 const mac = process.platform === 'darwin';
 const key = (k, el) => el.dispatchEvent(new KeyboardEvent('keydown', mac
@@ -176,7 +176,7 @@ const key = (k, el) => el.dispatchEvent(new KeyboardEvent('keydown', mac
   : { key: k, ctrlKey: true, shiftKey: true, bubbles: true, cancelable: true }));
 
 (async () => {
-  const plugin = new PluginClass(app, { id: 'vault-terminal', dir: '.obsidian/plugins/vault-terminal', version: '1.0.1' });
+  const plugin = new PluginClass(app, { id: 'terminal-tabs', dir: '.obsidian/plugins/terminal-tabs', version: '1.0.1' });
   await plugin.onload();
   // Test with a plain bash so user dotfiles don't affect the output
   plugin.settings.profiles.unshift({ id: 'test-bash', name: 'bash', command: '/bin/bash', args: '--norc --noprofile -i' });
@@ -196,7 +196,7 @@ const key = (k, el) => el.dispatchEvent(new KeyboardEvent('keydown', mac
     v1 = terminals()[0].view; s1 = v1.session; bottom = terminals()[0].parent;
     assert(bottom !== editorGroup, 'not in a separate (bottom) group');
     assert(titles(bottom).join('|') === 'Local', 'tab titles: ' + titles(bottom));
-    assert(!document.querySelector('.vault-terminal-tabbar'), 'old inner tab bar still rendered');
+    assert(!document.querySelector('.terminal-tabs-tabbar'), 'old inner tab bar still rendered');
     await waitFor(() => s1.isRunning, 3000, 'running');
     s1.write('echo "cwd=$(pwd)"; echo "term=$TERM vault=$OBSIDIAN_VAULT"\r');
     await waitFor(() => screenText(s1).includes('cwd=' + vault), 5000, 'cwd output');
@@ -245,7 +245,7 @@ const key = (k, el) => el.dispatchEvent(new KeyboardEvent('keydown', mac
   await test('double click on the Obsidian tab renames it inline', async () => {
     const leaf2 = bottom.children[1];
     leaf2.tabHeaderEl.dispatchEvent(new MouseEvent('dblclick', { bubbles: true, cancelable: true }));
-    const input = leaf2.tabHeaderEl.querySelector('input.vault-terminal-tab-rename');
+    const input = leaf2.tabHeaderEl.querySelector('input.terminal-tabs-tab-rename');
     assert(input, 'no rename input in tab header');
     input.value = 'git';
     input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
@@ -305,7 +305,7 @@ const key = (k, el) => el.dispatchEvent(new KeyboardEvent('keydown', mac
     await waitFor(() => !s.isRunning, 4000, 'exit');
     assert(leaf.view.session === s && terminals().includes(leaf), 'tab closed on exit 3');
     assert(/exited with code 3/.test(screenText(s)), 'no exit message');
-    assert(leaf.tabHeaderEl.classList.contains('vault-terminal-exited'), 'tab not marked as exited');
+    assert(leaf.tabHeaderEl.classList.contains('terminal-tabs-exited'), 'tab not marked as exited');
     s.term.input('\r'); // Enter restarts
     await waitFor(() => s.isRunning, 3000, 'restart');
     s.write('exit\r');
@@ -317,7 +317,7 @@ const key = (k, el) => el.dispatchEvent(new KeyboardEvent('keydown', mac
     bottom.newBtn.click();
     await sleep(20);
     const emptyLeaf = bottom.children[bottom.children.length - 1];
-    const action = emptyLeaf.containerEl.querySelector('.vault-terminal-empty-action');
+    const action = emptyLeaf.containerEl.querySelector('.terminal-tabs-empty-action');
     assert(action, 'no "Open terminal" action');
     assert(/Open terminal/.test(action.textContent), action.textContent);
     action.click();
@@ -335,7 +335,7 @@ const key = (k, el) => el.dispatchEvent(new KeyboardEvent('keydown', mac
     assert(texts.join('|') === `Create new note (⌘ N)|Go to file (⌘ O)|Open terminal|Open terminal: bash|Close`, texts.join('|'));
     const ours = items[2], native = items[0];
     assert(ours.tagName === native.tagName, 'tag ' + ours.tagName);
-    assert(ours.className === native.className + ' vault-terminal-empty-action', ours.className + ' vs ' + native.className);
+    assert(ours.className === native.className + ' terminal-tabs-empty-action', ours.className + ' vs ' + native.className);
     leaf.detach();
   });
 
@@ -349,7 +349,7 @@ const key = (k, el) => el.dispatchEvent(new KeyboardEvent('keydown', mac
     const ours = items[2], profile = items[3], native = items[0];
     assert(items[4].textContent === 'Close', 'Close not last: ' + items.map((e) => e.textContent).join('|'));
     assert(ours.tagName === 'BUTTON' && profile.tagName === 'BUTTON', 'not buttons');
-    assert(ours.className === native.className + ' vault-terminal-empty-action', ours.className);
+    assert(ours.className === native.className + ' terminal-tabs-empty-action', ours.className);
     assert(ours.querySelector('.empty-state-action-label').textContent === 'Open terminal', 'label');
     assert(!ours.querySelector('.empty-state-action-hotkey'), 'open terminal should have no hotkey badge');
     assert(ours.querySelector('.empty-state-action-icon svg').getAttribute('data-icon') === 'terminal', 'icon');
@@ -370,7 +370,7 @@ const key = (k, el) => el.dispatchEvent(new KeyboardEvent('keydown', mac
   await test('find bar finds text', async () => {
     app.workspace.setActiveLeaf(v1.leaf);
     s1.openFind();
-    const input = s1.el.querySelector('.vault-terminal-find input');
+    const input = s1.el.querySelector('.terminal-tabs-find input');
     input.value = 'ideas';
     input.dispatchEvent(new Event('input'));
     assert(s1.term.getSelection() === 'ideas', 'sel=' + s1.term.getSelection());

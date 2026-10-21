@@ -14,7 +14,7 @@ const cssPlugin = {
       const css = [
         '/* ---- xterm.js ---- */',
         fs.readFileSync('node_modules/@xterm/xterm/css/xterm.css', 'utf8'),
-        '/* ---- Vault Terminal ---- */',
+        '/* ---- Terminal Tabs ---- */',
         fs.readFileSync('src/styles.css', 'utf8'),
       ].join('\n');
       fs.writeFileSync(path.join(outDir, 'styles.css'), css);
@@ -24,7 +24,7 @@ const cssPlugin = {
 };
 
 const ctx = await esbuild.context({
-  banner: { js: '/* Vault Terminal - bundled by esbuild. Source: src/ */' },
+  banner: { js: '/* Terminal Tabs - bundled by esbuild. Source: src/ */' },
   entryPoints: ['src/main.ts'],
   bundle: true,
   external: ['obsidian', 'electron', '@codemirror/*', '@lezer/*', ...builtins, ...builtins.map((m) => `node:${m}`)],

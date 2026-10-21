@@ -1,6 +1,6 @@
 import { setIcon } from 'obsidian';
 
-export const EMPTY_ACTION_CLS = 'vault-terminal-empty-action';
+export const EMPTY_ACTION_CLS = 'terminal-tabs-empty-action';
 
 const HOTKEY_RE = /[⌘⌥⇧⌃]|\b(Ctrl|Alt|Shift|Cmd|Meta|Mod)\b/;
 

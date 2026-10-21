@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Renamed to Terminal Tabs: the plugin ID is now `terminal-tabs` and the repository is `krzysztofkut/obsidian-terminal-tabs`. Install it again under the new ID; terminal tabs open in the old version are not restored.
+- Shells get `TERM_PROGRAM=terminal-tabs`.
+
 ## [1.0.1] - 2026-10-21
 
 ### Added
@@ -29,6 +33,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Colours that follow the Obsidian theme.
 - UI in 14 languages.
 
-[Unreleased]: https://github.com/krzysztofkut/obsidian-vault-terminal/compare/1.0.1...HEAD
-[1.0.1]: https://github.com/krzysztofkut/obsidian-vault-terminal/compare/1.0.0...1.0.1
-[1.0.0]: https://github.com/krzysztofkut/obsidian-vault-terminal/releases/tag/1.0.0
+[Unreleased]: https://github.com/krzysztofkut/obsidian-terminal-tabs/compare/1.0.1...HEAD
+[1.0.1]: https://github.com/krzysztofkut/obsidian-terminal-tabs/compare/1.0.0...1.0.1
+[1.0.0]: https://github.com/krzysztofkut/obsidian-terminal-tabs/releases/tag/1.0.0

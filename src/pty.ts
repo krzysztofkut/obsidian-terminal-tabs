@@ -133,7 +133,7 @@ export class PtyProcess {
 		});
 		this.proc.stdin.on('error', () => {});
 		this.proc.on('error', (err) => {
-			this.onData(Buffer.from(`\r\n\x1b[31m[Vault Terminal] ${err.message}\x1b[0m\r\n`, 'utf8'));
+			this.onData(Buffer.from(`\r\n\x1b[31m[Terminal Tabs] ${err.message}\x1b[0m\r\n`, 'utf8'));
 			this.finish(-1);
 		});
 		this.proc.on('close', (code, signal) => this.finish(code ?? (signal ? 128 : -1)));

@@ -35,9 +35,9 @@ export const en = {
 	processExited: 'Process exited with code {code}',
 	pressEnterToRestart: 'Press Enter to restart, Esc to close the tab.',
 	pythonMissing:
-		'Vault Terminal needs Python 3 to create a pseudo-terminal. Install it (e.g. `xcode-select --install` or `brew install python`) or set the Python path in the plugin settings.',
+		'Terminal Tabs needs Python 3 to create a pseudo-terminal. Install it (e.g. `xcode-select --install` or `brew install python`) or set the Python path in the plugin settings.',
 	pythonMissingWin:
-		'Vault Terminal needs Python 3 with the "pywinpty" package (python -m pip install pywinpty). You can set the Python path in the plugin settings.',
+		'Terminal Tabs needs Python 3 with the "pywinpty" package (python -m pip install pywinpty). You can set the Python path in the plugin settings.',
 	openInTerminal: 'Open in Terminal',
 	openTerminal: 'Open terminal',
 	openTerminalWith: 'Open terminal: {name}',

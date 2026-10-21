@@ -1,4 +1,4 @@
-# Vault Terminal - PTY bridge.
+# Terminal Tabs - PTY bridge.
 #
 # Started by the Obsidian plugin as:
 #     python3 -u pty_helper.py <cols> <rows> <shell> [shell args...]
@@ -81,7 +81,7 @@ def run_unix(cols, rows, argv):
             os.execvp(argv[0], argv)
         except BaseException as exc:  # exec failed
             try:
-                os.write(2, ("\r\n\x1b[31m[Vault Terminal] Cannot start %r: %s\x1b[0m\r\n"
+                os.write(2, ("\r\n\x1b[31m[Terminal Tabs] Cannot start %r: %s\x1b[0m\r\n"
                              % (argv[0], exc)).encode("utf-8", "replace"))
             except Exception:
                 pass
@@ -226,7 +226,7 @@ def run_windows(cols, rows, argv):
     try:
         from winpty import PtyProcess
     except ImportError:
-        msg = ("\r\n\x1b[31m[Vault Terminal] The Python package \"pywinpty\" is missing.\x1b[0m\r\n"
+        msg = ("\r\n\x1b[31m[Terminal Tabs] The Python package \"pywinpty\" is missing.\x1b[0m\r\n"
                "Install it and reopen the tab:\r\n\r\n    \"%s\" -m pip install pywinpty\r\n" % sys.executable)
         out.write(msg.encode("utf-8"))
         out.flush()
@@ -235,7 +235,7 @@ def run_windows(cols, rows, argv):
     try:
         proc = PtyProcess.spawn(argv, cwd=os.getcwd(), env=dict(os.environ), dimensions=(rows, cols))
     except Exception as exc:
-        out.write(("\r\n\x1b[31m[Vault Terminal] Cannot start %r: %s\x1b[0m\r\n"
+        out.write(("\r\n\x1b[31m[Terminal Tabs] Cannot start %r: %s\x1b[0m\r\n"
                    % (argv[0], exc)).encode("utf-8", "replace"))
         out.flush()
         return 127

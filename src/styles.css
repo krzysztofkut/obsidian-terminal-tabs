@@ -1,11 +1,11 @@
 /* Layout ------------------------------------------------------------------ */
 
-.workspace-leaf-content[data-type='vault-terminal-view'] > .view-content.vault-terminal {
+.workspace-leaf-content[data-type='terminal-tabs-view'] > .view-content.terminal-tabs {
 	padding: 0;
 	overflow: hidden;
 }
 
-.vault-terminal {
+.terminal-tabs {
 	--vt-bg: var(--background-primary);
 	display: flex;
 	flex-direction: column;
@@ -13,23 +13,23 @@
 	background: var(--vt-bg);
 }
 
-.mod-sidedock .vault-terminal {
+.mod-sidedock .terminal-tabs {
 	--vt-bg: var(--background-secondary);
 }
 
 /* The Obsidian tab already shows the terminal's name - hide the view header (optional). */
-.workspace-leaf-content.vault-terminal-leaf.vault-terminal-hide-header > .view-header {
+.workspace-leaf-content.terminal-tabs-leaf.terminal-tabs-hide-header > .view-header {
 	display: none;
 }
 
 /* Obsidian tab header of a terminal ------------------------------------------ */
 
-.workspace-tab-header.vault-terminal-exited .workspace-tab-header-inner-title {
+.workspace-tab-header.terminal-tabs-exited .workspace-tab-header-inner-title {
 	opacity: 0.55;
 	font-style: italic;
 }
 
-.workspace-tab-header-inner-title input.vault-terminal-tab-rename {
+.workspace-tab-header-inner-title input.terminal-tabs-tab-rename {
 	height: 20px;
 	padding: 0 4px;
 	font-size: inherit;
@@ -39,28 +39,28 @@
 
 /* Terminal body --------------------------------------------------------------- */
 
-.vault-terminal-body {
+.terminal-tabs-body {
 	position: relative;
 	flex: 1 1 auto;
 	min-height: 0;
 }
 
-.vault-terminal-session {
+.terminal-tabs-session {
 	position: absolute;
 	inset: 0;
 	padding: 4px 0 0 8px;
 	background: var(--vt-bg);
 }
 
-.vault-terminal-session .xterm {
+.terminal-tabs-session .xterm {
 	height: 100%;
 }
 
-.vault-terminal-session .xterm-viewport {
+.terminal-tabs-session .xterm-viewport {
 	background-color: transparent;
 }
 
-.vault-terminal-session .xterm .xterm-helper-textarea {
+.terminal-tabs-session .xterm .xterm-helper-textarea {
 	/* Obsidian styles every textarea - keep xterm's hidden input invisible */
 	border: none !important;
 	box-shadow: none !important;
@@ -70,7 +70,7 @@
 
 /* Find bar ------------------------------------------------------------------- */
 
-.vault-terminal-find {
+.terminal-tabs-find {
 	position: absolute;
 	top: 6px;
 	right: 18px;
@@ -85,66 +85,66 @@
 	box-shadow: var(--shadow-s);
 }
 
-.vault-terminal-find input {
+.terminal-tabs-find input {
 	width: 180px;
 	height: 24px;
 	font-size: var(--font-ui-small);
 }
 
-.vault-terminal-find.mod-no-match input {
+.terminal-tabs-find.mod-no-match input {
 	color: var(--text-error);
 	border-color: var(--background-modifier-error);
 }
 
-.vault-terminal-find .clickable-icon {
+.terminal-tabs-find .clickable-icon {
 	padding: 3px;
 }
 
-.vault-terminal-find .clickable-icon.is-active {
+.terminal-tabs-find .clickable-icon.is-active {
 	color: var(--text-on-accent);
 	background: var(--interactive-accent);
 }
 
-.vault-terminal-find svg {
+.terminal-tabs-find svg {
 	width: 14px;
 	height: 14px;
 }
 
 /* Settings ------------------------------------------------------------------- */
 
-.vault-terminal-settings .vault-terminal-profile-row .setting-item-info {
+.terminal-tabs-settings .terminal-tabs-profile-row .setting-item-info {
 	display: none;
 }
 
-.vault-terminal-settings .vault-terminal-profile-row .setting-item-control {
+.terminal-tabs-settings .terminal-tabs-profile-row .setting-item-control {
 	justify-content: flex-start;
 }
 
-.vault-terminal-settings .vault-terminal-profile-row input[type='text'] {
+.terminal-tabs-settings .terminal-tabs-profile-row input[type='text'] {
 	width: 140px;
 }
 
-.vault-terminal-settings .vault-terminal-profile-row input.vault-terminal-profile-command {
+.terminal-tabs-settings .terminal-tabs-profile-row input.terminal-tabs-profile-command {
 	flex: 1 1 auto;
 	width: auto;
 	font-family: var(--font-monospace);
 }
 
-.vault-terminal-settings .vault-terminal-mono {
+.terminal-tabs-settings .terminal-tabs-mono {
 	font-family: var(--font-monospace);
 	width: 100%;
 }
 
-.vault-terminal-python-status {
+.terminal-tabs-python-status {
 	margin-top: 4px;
 	font-family: var(--font-monospace);
 	font-size: var(--font-ui-smaller);
 }
 
-.vault-terminal-python-status.mod-ok {
+.terminal-tabs-python-status.mod-ok {
 	color: var(--text-success);
 }
 
-.vault-terminal-python-status.mod-warn {
+.terminal-tabs-python-status.mod-warn {
 	color: var(--text-warning);
 }

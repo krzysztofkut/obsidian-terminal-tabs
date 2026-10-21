@@ -4,7 +4,7 @@ import * as path from 'path';
 import { t } from './i18n';
 import { detectPython } from './pty';
 import { monospaceFont } from './theme';
-import type VaultTerminalPlugin from './main';
+import type TerminalTabsPlugin from './main';
 
 export interface ShellProfile {
 	id: string;
@@ -17,7 +17,7 @@ export type StartDir = 'vault' | 'activeFolder' | 'custom';
 export type Location = 'bottom' | 'right' | 'tab';
 export type ColorScheme = 'auto' | 'dark' | 'light';
 
-export interface VaultTerminalSettings {
+export interface TerminalTabsSettings {
 	profiles: ShellProfile[];
 	defaultProfile: string;
 	pythonPath: string;
@@ -42,7 +42,7 @@ export interface VaultTerminalSettings {
 	colorScheme: ColorScheme;
 }
 
-export const DEFAULT_SETTINGS: VaultTerminalSettings = {
+export const DEFAULT_SETTINGS: TerminalTabsSettings = {
 	profiles: [],
 	defaultProfile: '',
 	pythonPath: '',
@@ -114,8 +114,8 @@ export function detectProfiles(): ShellProfile[] {
 	return out;
 }
 
-export class VaultTerminalSettingTab extends PluginSettingTab {
-	constructor(app: App, private plugin: VaultTerminalPlugin) {
+export class TerminalTabsSettingTab extends PluginSettingTab {
+	constructor(app: App, private plugin: TerminalTabsPlugin) {
 		super(app, plugin);
 	}
 
@@ -128,7 +128,7 @@ export class VaultTerminalSettingTab extends PluginSettingTab {
 		const { containerEl } = this;
 		const s = this.plugin.settings;
 		containerEl.empty();
-		containerEl.addClass('vault-terminal-settings');
+		containerEl.addClass('terminal-tabs-settings');
 
 		// ---------------------------------------------------------------- shell
 		new Setting(containerEl).setName(t('setShell')).setHeading();
@@ -146,7 +146,7 @@ export class VaultTerminalSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl).setName(t('setProfiles')).setDesc(t('setProfilesDesc'));
 		for (const profile of s.profiles) {
-			const row = new Setting(containerEl).setClass('vault-terminal-profile-row');
+			const row = new Setting(containerEl).setClass('terminal-tabs-profile-row');
 			row.addText((tx) =>
 				tx
 					.setPlaceholder(t('setProfileName'))
@@ -157,7 +157,7 @@ export class VaultTerminalSettingTab extends PluginSettingTab {
 					}),
 			);
 			row.addText((tx) => {
-				tx.inputEl.addClass('vault-terminal-profile-command');
+				tx.inputEl.addClass('terminal-tabs-profile-command');
 				tx.setPlaceholder(t('setProfileCommand'))
 					.setValue(profile.command)
 					.onChange(async (v) => {
@@ -205,7 +205,7 @@ export class VaultTerminalSettingTab extends PluginSettingTab {
 			);
 
 		const py = new Setting(containerEl).setName(t('setPython')).setDesc(t('setPythonDesc'));
-		const status = py.descEl.createDiv({ cls: 'vault-terminal-python-status' });
+		const status = py.descEl.createDiv({ cls: 'terminal-tabs-python-status' });
 		const check = () => {
 			const info = detectPython(s.pythonPath, this.plugin.baseEnv());
 			this.plugin.python = info;
@@ -237,7 +237,7 @@ export class VaultTerminalSettingTab extends PluginSettingTab {
 			.setDesc(t('setEnvDesc'))
 			.addTextArea((ta) => {
 				ta.inputEl.rows = 3;
-				ta.inputEl.addClass('vault-terminal-mono');
+				ta.inputEl.addClass('terminal-tabs-mono');
 				ta.setValue(s.env)
 					.onChange(async (v) => {
 						s.env = v;
@@ -351,7 +351,7 @@ export class VaultTerminalSettingTab extends PluginSettingTab {
 				.addOption('underline', t('cursorUnderline'))
 				.setValue(s.cursorStyle)
 				.onChange(async (v) => {
-					s.cursorStyle = v as VaultTerminalSettings['cursorStyle'];
+					s.cursorStyle = v as TerminalTabsSettings['cursorStyle'];
 					await this.save();
 				}),
 		);
@@ -373,7 +373,7 @@ export class VaultTerminalSettingTab extends PluginSettingTab {
 	private toggle(
 		el: HTMLElement,
 		name: Parameters<typeof t>[0],
-		key: { [K in keyof VaultTerminalSettings]: VaultTerminalSettings[K] extends boolean ? K : never }[keyof VaultTerminalSettings],
+		key: { [K in keyof TerminalTabsSettings]: TerminalTabsSettings[K] extends boolean ? K : never }[keyof TerminalTabsSettings],
 		desc?: Parameters<typeof t>[0],
 	) {
 		const st = new Setting(el).setName(t(name));

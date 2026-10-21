@@ -1,12 +1,12 @@
-# Vault Terminal
+# Terminal Tabs
 
 A terminal built into Obsidian, started in your vault folder, with many tabs at once. Run your shell — or a tool such as Claude Code — right next to your notes.
 
 Desktop only (macOS, Linux, Windows).
 
-![Vault Terminal: a note above, terminal tabs below](docs/screenshot.png)
+![Terminal Tabs: a note above, terminal tabs below](docs/screenshot.png)
 
-**Private by design.** Vault Terminal has no network access, no telemetry, no accounts and no ads. It collects nothing and sends nothing anywhere; everything runs locally on your computer. Details: [Privacy and system access](#privacy-and-system-access).
+**Private by design.** Terminal Tabs has no network access, no telemetry, no accounts and no ads. It collects nothing and sends nothing anywhere; everything runs locally on your computer. Details: [Privacy and system access](#privacy-and-system-access).
 
 ## Features
 
@@ -24,7 +24,7 @@ Desktop only (macOS, Linux, Windows).
 
 ## Requirements
 
-Vault Terminal uses Python 3 to create the pseudo-terminal (see [How it works](#how-it-works)):
+Terminal Tabs uses Python 3 to create the pseudo-terminal (see [How it works](#how-it-works)):
 
 - **macOS / Linux** – the system `python3` is enough (on macOS: `xcode-select --install` or Homebrew).
 - **Windows** – Python 3 and `python -m pip install pywinpty`.
@@ -33,13 +33,13 @@ If Python is not on your `PATH`, set it in the plugin settings; the *Check* butt
 
 ## Installation
 
-From Obsidian: *Settings → Community plugins → Browse*, search for **Vault Terminal**, install and enable it.
+From Obsidian: *Settings → Community plugins → Browse*, search for **Terminal Tabs**, install and enable it.
 
-Manually: download `main.js`, `manifest.json` and `styles.css` from the [latest release](https://github.com/krzysztofkut/obsidian-vault-terminal/releases/latest) into `<vault>/.obsidian/plugins/vault-terminal/`, then enable **Vault Terminal** in *Settings → Community plugins*.
+Manually: download `main.js`, `manifest.json` and `styles.css` from the [latest release](https://github.com/krzysztofkut/obsidian-terminal-tabs/releases/latest) into `<vault>/.obsidian/plugins/terminal-tabs/`, then enable **Terminal Tabs** in *Settings → Community plugins*.
 
 ## Shell profiles
 
-*Settings → Vault Terminal → Shell profiles* lists the shells found on your system. Each profile is a command with arguments, so it can start any program, not only a shell. The **default profile** is used by *Toggle terminal* and *Open terminal*; the others are available from the tab menu, the empty *New tab* page and *New terminal tab with profile…*.
+*Settings → Terminal Tabs → Shell profiles* lists the shells found on your system. Each profile is a command with arguments, so it can start any program, not only a shell. The **default profile** is used by *Toggle terminal* and *Open terminal*; the others are available from the tab menu, the empty *New tab* page and *New terminal tab with profile…*.
 
 ### Example: Claude Code
 
@@ -63,7 +63,7 @@ Make it the default profile and the terminal opens straight into Claude Code. Th
 
 ## Hotkeys
 
-The plugin sets no Obsidian hotkeys. Assign one to **Vault Terminal: Toggle terminal** in *Settings → Hotkeys*, e.g. Alt+F12. Without a hotkey, open a new tab and choose **Open terminal**, or use the command palette.
+The plugin sets no Obsidian hotkeys. Assign one to **Terminal Tabs: Toggle terminal** in *Settings → Hotkeys*, e.g. Alt+F12. Without a hotkey, open a new tab and choose **Open terminal**, or use the command palette.
 
 Inside the terminal:
 
@@ -87,7 +87,7 @@ While the terminal is focused, Obsidian hotkeys are disabled so they don't take 
 - **Files outside the vault.** The terminal runs your own shell with your user's permissions, so it can read and change any file you can, not only the vault. That is the purpose of a terminal.
 - **Programs it starts:** Python 3 (the PTY bridge), the shell or command from your profile, and `pgrep` plus `lsof` (macOS) to read the shell's current folder.
 - **Files it writes:** its settings (`data.json`) and the bridge script `pty_helper.py`, both in its own plugin folder. Open tabs are saved in Obsidian's workspace like any other tab.
-- **Environment:** shells get Obsidian's environment plus `TERM`, `COLORTERM`, `TERM_PROGRAM=vault-terminal`, `OBSIDIAN_VAULT` (the vault path) and the variables you add in the settings.
+- **Environment:** shells get Obsidian's environment plus `TERM`, `COLORTERM`, `TERM_PROGRAM=terminal-tabs`, `OBSIDIAN_VAULT` (the vault path) and the variables you add in the settings.
 
 ## How it works
 
@@ -106,8 +106,8 @@ On macOS and Linux shells start as a *login shell* (`-l`), so `PATH` from `~/.zp
 ```bash
 npm install
 npm run build                                  # typecheck + main.js + styles.css
-npm run install-plugin -- "/path/to/vault"     # copies into .obsidian/plugins/vault-terminal
-OUT_DIR="/path/to/vault/.obsidian/plugins/vault-terminal" npm run dev   # watch mode
+npm run install-plugin -- "/path/to/vault"     # copies into .obsidian/plugins/terminal-tabs
+OUT_DIR="/path/to/vault/.obsidian/plugins/terminal-tabs" npm run dev   # watch mode
 npm test                                       # PTY bridge + translations
 npm run test:e2e                               # main.js in Electron with a mocked Obsidian API
 ```

@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for helping with Vault Terminal!
+Thanks for helping with Terminal Tabs!
 
 ## Issues
 

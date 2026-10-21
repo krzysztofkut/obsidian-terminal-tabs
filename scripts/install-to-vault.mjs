@@ -1,5 +1,5 @@
 // Copies the built plugin into a vault:  npm run install-plugin -- "/path/to/vault"
-// (or set OBSIDIAN_VAULT). Then enable "Vault Terminal" in Settings → Community plugins.
+// (or set OBSIDIAN_VAULT). Then enable "Terminal Tabs" in Settings → Community plugins.
 import fs from 'node:fs';
 import path from 'node:path';
 

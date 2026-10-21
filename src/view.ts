@@ -1,9 +1,9 @@
 import { ItemView, Menu, Modal, Setting, ViewStateResult, WorkspaceLeaf } from 'obsidian';
 import { t } from './i18n';
 import { SessionHost, SessionState, TerminalSession } from './session';
-import type VaultTerminalPlugin from './main';
+import type TerminalTabsPlugin from './main';
 
-export const VIEW_TYPE = 'vault-terminal-view';
+export const VIEW_TYPE = 'terminal-tabs-view';
 
 export interface TerminalViewState {
 	name?: string;
@@ -26,14 +26,14 @@ export class TerminalView extends ItemView implements SessionHost {
 	session: TerminalSession | null = null;
 	lastFocused = 0;
 
-	private plugin: VaultTerminalPlugin;
+	private plugin: TerminalTabsPlugin;
 	private bodyEl!: HTMLElement;
 	private closing = false;
 	private resizeObserver: ResizeObserver | null = null;
 	private fitFrame: number | null = null;
 	private headerHooked: HTMLElement | null = null;
 
-	constructor(leaf: WorkspaceLeaf, plugin: VaultTerminalPlugin) {
+	constructor(leaf: WorkspaceLeaf, plugin: TerminalTabsPlugin) {
 		super(leaf);
 		this.plugin = plugin;
 		this.navigation = false;
@@ -54,12 +54,12 @@ export class TerminalView extends ItemView implements SessionHost {
 	// ------------------------------------------------------------ lifecycle
 
 	async onOpen(): Promise<void> {
-		this.containerEl.addClass('vault-terminal-leaf');
+		this.containerEl.addClass('terminal-tabs-leaf');
 		this.applyHeaderSetting();
 		const root = this.contentEl;
 		root.empty();
-		root.addClass('vault-terminal');
-		this.bodyEl = root.createDiv({ cls: 'vault-terminal-body' });
+		root.addClass('terminal-tabs');
+		this.bodyEl = root.createDiv({ cls: 'terminal-tabs-body' });
 
 		this.resizeObserver = new ResizeObserver(() => this.scheduleFit());
 		this.resizeObserver.observe(this.bodyEl);
@@ -114,7 +114,7 @@ export class TerminalView extends ItemView implements SessionHost {
 
 	onSessionChange() {
 		const header = (this.leaf as unknown as LeafInternals).tabHeaderEl;
-		header?.toggleClass('vault-terminal-exited', !!this.session && !this.session.isRunning);
+		header?.toggleClass('terminal-tabs-exited', !!this.session && !this.session.isRunning);
 	}
 
 	onSessionFocus() {
@@ -164,7 +164,7 @@ export class TerminalView extends ItemView implements SessionHost {
 		const header = leaf.tabHeaderEl;
 		if (header && this.headerHooked !== header) {
 			this.headerHooked = header;
-			header.addClass('vault-terminal-tab-header');
+			header.addClass('terminal-tabs-tab-header');
 			this.registerDomEvent(header, 'dblclick', (e) => {
 				e.preventDefault();
 				e.stopPropagation();
@@ -175,7 +175,7 @@ export class TerminalView extends ItemView implements SessionHost {
 	}
 
 	private renameInline(title: HTMLElement, s: TerminalSession) {
-		const input = createEl('input', { cls: 'vault-terminal-tab-rename', type: 'text', value: s.name });
+		const input = createEl('input', { cls: 'terminal-tabs-tab-rename', type: 'text', value: s.name });
 		input.size = Math.max(6, s.name.length + 1);
 		title.empty();
 		title.appendChild(input);
@@ -202,7 +202,7 @@ export class TerminalView extends ItemView implements SessionHost {
 	}
 
 	applyHeaderSetting() {
-		this.containerEl.toggleClass('vault-terminal-hide-header', !this.plugin.settings.showViewHeader);
+		this.containerEl.toggleClass('terminal-tabs-hide-header', !this.plugin.settings.showViewHeader);
 	}
 
 	// ------------------------------------------------------------ menus
@@ -286,7 +286,7 @@ export class TerminalView extends ItemView implements SessionHost {
 
 class RenameModal extends Modal {
 	constructor(
-		plugin: VaultTerminalPlugin,
+		plugin: TerminalTabsPlugin,
 		private value: string,
 		private onSubmit: (v: string) => void,
 	) {

@@ -11,7 +11,7 @@ import * as path from 'path';
 import { t } from './i18n';
 import { PtyProcess, splitArgs } from './pty';
 import { buildTheme, monospaceFont } from './theme';
-import type VaultTerminalPlugin from './main';
+import type TerminalTabsPlugin from './main';
 
 export interface SessionState {
 	name: string;
@@ -59,7 +59,7 @@ export class TerminalSession {
 	cwd: string;
 	profileId: string;
 
-	private plugin: VaultTerminalPlugin;
+	private plugin: TerminalTabsPlugin;
 	private host: SessionHost;
 	private fit = new FitAddon();
 	private search = new SearchAddon();
@@ -74,7 +74,7 @@ export class TerminalSession {
 	private findOpts = { caseSensitive: false, regex: false };
 	private cwdTimer: number | null = null;
 
-	constructor(plugin: VaultTerminalPlugin, host: SessionHost, parent: HTMLElement, st: SessionState) {
+	constructor(plugin: TerminalTabsPlugin, host: SessionHost, parent: HTMLElement, st: SessionState) {
 		this.plugin = plugin;
 		this.host = host;
 		this.name = st.name;
@@ -82,7 +82,7 @@ export class TerminalSession {
 		this.cwd = st.cwd;
 		this.profileId = st.profileId;
 
-		this.el = parent.createDiv({ cls: 'vault-terminal-session' });
+		this.el = parent.createDiv({ cls: 'terminal-tabs-session' });
 		this.el.hide();
 
 		const s = plugin.settings;
@@ -221,7 +221,7 @@ export class TerminalSession {
 			});
 		} catch (e) {
 			this.state = 'exited';
-			this.term.write(`\r\n\x1b[31m[Vault Terminal] ${(e as Error).message}\x1b[0m\r\n`);
+			this.term.write(`\r\n\x1b[31m[Terminal Tabs] ${(e as Error).message}\x1b[0m\r\n`);
 			return;
 		}
 		this.state = 'running';
@@ -506,7 +506,7 @@ export class TerminalSession {
 	}
 
 	private buildFindBar() {
-		const bar = this.el.createDiv({ cls: 'vault-terminal-find' });
+		const bar = this.el.createDiv({ cls: 'terminal-tabs-find' });
 		const input = bar.createEl('input', { type: 'text', attr: { placeholder: t('findPlaceholder'), spellcheck: 'false' } });
 		const mkBtn = (icon: string, label: string, fn: () => void) => {
 			const b = bar.createDiv({ cls: 'clickable-icon', attr: { 'aria-label': label } });

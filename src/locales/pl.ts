@@ -22,9 +22,9 @@ export const pl: Locale = {
 	processExited: 'Proces zakończył się z kodem {code}',
 	pressEnterToRestart: 'Enter – uruchom ponownie, Esc – zamknij kartę.',
 	pythonMissing:
-		'Vault Terminal potrzebuje Pythona 3 do utworzenia pseudoterminala. Zainstaluj go (np. `xcode-select --install` albo `brew install python`) lub podaj ścieżkę w ustawieniach wtyczki.',
+		'Terminal Tabs potrzebuje Pythona 3 do utworzenia pseudoterminala. Zainstaluj go (np. `xcode-select --install` albo `brew install python`) lub podaj ścieżkę w ustawieniach wtyczki.',
 	pythonMissingWin:
-		'Vault Terminal potrzebuje Pythona 3 z pakietem "pywinpty" (python -m pip install pywinpty). Ścieżkę do Pythona możesz ustawić w ustawieniach wtyczki.',
+		'Terminal Tabs potrzebuje Pythona 3 z pakietem "pywinpty" (python -m pip install pywinpty). Ścieżkę do Pythona możesz ustawić w ustawieniach wtyczki.',
 	openInTerminal: 'Otwórz w terminalu',
 	openTerminal: 'Otwórz terminal',
 	openTerminalWith: 'Otwórz terminal: {name}',

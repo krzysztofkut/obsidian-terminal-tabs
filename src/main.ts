@@ -2,11 +2,11 @@ import { FileSystemAdapter, FuzzySuggestModal, MarkdownView, Notice, Platform, P
 import * as path from 'path';
 import { t } from './i18n';
 import { PythonInfo, detectPython, ensureHelper } from './pty';
-import { DEFAULT_SETTINGS, ShellProfile, VaultTerminalSettingTab, VaultTerminalSettings, detectProfiles } from './settings';
+import { DEFAULT_SETTINGS, ShellProfile, TerminalTabsSettingTab, TerminalTabsSettings, detectProfiles } from './settings';
 import { TerminalView, TerminalViewState, VIEW_TYPE } from './view';
 import { EMPTY_ACTION_CLS, createEmptyTabAction } from './empty-tab';
 
-type Loc = VaultTerminalSettings['location'];
+type Loc = TerminalTabsSettings['location'];
 
 export interface NewTerminalOptions {
 	profileId?: string;
@@ -18,8 +18,8 @@ export interface NewTerminalOptions {
 }
 
 
-export default class VaultTerminalPlugin extends Plugin {
-	settings!: VaultTerminalSettings;
+export default class TerminalTabsPlugin extends Plugin {
+	settings!: TerminalTabsSettings;
 	/** undefined = not checked yet, null = not found */
 	python: PythonInfo | null | undefined;
 	lastTerminalView: TerminalView | null = null;
@@ -30,7 +30,7 @@ export default class VaultTerminalPlugin extends Plugin {
 		await this.loadSettings();
 
 		this.registerView(VIEW_TYPE, (leaf) => new TerminalView(leaf, this));
-		this.addSettingTab(new VaultTerminalSettingTab(this.app, this));
+		this.addSettingTab(new TerminalTabsSettingTab(this.app, this));
 
 		this.addCommand({
 			id: 'toggle',
@@ -127,7 +127,7 @@ export default class VaultTerminalPlugin extends Plugin {
 	// -------------------------------------------------------------- settings
 
 	async loadSettings() {
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, (await this.loadData()) as Partial<VaultTerminalSettings> | null);
+		this.settings = Object.assign({}, DEFAULT_SETTINGS, (await this.loadData()) as Partial<TerminalTabsSettings> | null);
 		if (!Array.isArray(this.settings.profiles) || !this.settings.profiles.length) {
 			this.settings.profiles = detectProfiles();
 			this.settings.defaultProfile = this.settings.profiles[0]?.id ?? '';
@@ -194,7 +194,7 @@ export default class VaultTerminalPlugin extends Plugin {
 		const env = this.baseEnv();
 		env.TERM = 'xterm-256color';
 		env.COLORTERM = 'truecolor';
-		env.TERM_PROGRAM = 'vault-terminal';
+		env.TERM_PROGRAM = 'terminal-tabs';
 		env.TERM_PROGRAM_VERSION = this.manifest.version;
 		env.OBSIDIAN_VAULT = this.vaultPath();
 		if (!Platform.isWin && !env.LANG && !env.LC_ALL) env.LANG = 'en_US.UTF-8';
@@ -410,7 +410,7 @@ export default class VaultTerminalPlugin extends Plugin {
 
 class ProfileModal extends FuzzySuggestModal<ShellProfile> {
 	constructor(
-		private plugin: VaultTerminalPlugin,
+		private plugin: TerminalTabsPlugin,
 		private onPick: (p: ShellProfile) => void,
 	) {
 		super(plugin.app);

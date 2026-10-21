@@ -1,6 +1,6 @@
 {
-  "id": "vault-terminal",
-  "name": "Vault Terminal",
+  "id": "terminal-tabs",
+  "name": "Terminal Tabs",
   "version": "1.0.1",
   "minAppVersion": "1.14.4",
   "description": "Open an integrated terminal with tabs in your vault.",
