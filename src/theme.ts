@@ -62,8 +62,7 @@ function cssToHex(css: string): string | null {
 /** Resolves any CSS colour expression (including var(--x)) in the context of `el`. */
 function resolve(el: HTMLElement, expr: string): string | null {
 	const probe = el.createDiv();
-	probe.style.display = 'none';
-	probe.style.color = expr;
+	probe.setCssStyles({ display: 'none', color: expr });
 	const value = getComputedStyle(probe).color;
 	probe.remove();
 	return cssToHex(value);
@@ -115,8 +114,7 @@ export function buildTheme(el: HTMLElement, scheme: ColorScheme): ITheme {
 
 export function monospaceFont(el: HTMLElement): string {
 	const probe = el.createDiv();
-	probe.style.display = 'none';
-	probe.style.fontFamily = 'var(--font-monospace)';
+	probe.setCssStyles({ display: 'none', fontFamily: 'var(--font-monospace)' });
 	const v = getComputedStyle(probe).fontFamily.trim();
 	probe.remove();
 	return v && v !== 'var(--font-monospace)' ? v : 'Menlo, Monaco, "Courier New", monospace';

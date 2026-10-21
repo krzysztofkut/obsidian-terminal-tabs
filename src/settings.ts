@@ -238,8 +238,7 @@ export class VaultTerminalSettingTab extends PluginSettingTab {
 			.addTextArea((ta) => {
 				ta.inputEl.rows = 3;
 				ta.inputEl.addClass('vault-terminal-mono');
-				ta.setPlaceholder('EDITOR=vim\nLANG=pl_PL.UTF-8')
-					.setValue(s.env)
+				ta.setValue(s.env)
 					.onChange(async (v) => {
 						s.env = v;
 						await this.save(false);
@@ -329,7 +328,6 @@ export class VaultTerminalSettingTab extends PluginSettingTab {
 			sl
 				.setLimits(8, 28, 1)
 				.setValue(s.fontSize)
-				.setDynamicTooltip()
 				.onChange(async (v) => {
 					s.fontSize = v;
 					await this.save();
@@ -340,7 +338,6 @@ export class VaultTerminalSettingTab extends PluginSettingTab {
 			sl
 				.setLimits(1, 2, 0.05)
 				.setValue(s.lineHeight)
-				.setDynamicTooltip()
 				.onChange(async (v) => {
 					s.lineHeight = v;
 					await this.save();

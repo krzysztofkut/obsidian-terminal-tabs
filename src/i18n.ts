@@ -1,4 +1,4 @@
-import * as obsidian from 'obsidian';
+import { getLanguage } from 'obsidian';
 import { de } from './locales/de';
 import { es } from './locales/es';
 import { fr } from './locales/fr';
@@ -130,17 +130,7 @@ export function pickLocale(lang: string): Locale {
 	return locales[l] ?? locales[l.split('-')[0]] ?? {};
 }
 
-function language(): string {
-	try {
-		const fn = (obsidian as unknown as { getLanguage?: () => string }).getLanguage;
-		if (typeof fn === 'function') return fn();
-	} catch {
-		/* older Obsidian */
-	}
-	return window.localStorage.getItem('language') || 'en';
-}
-
-const dict = pickLocale(language());
+const dict = pickLocale(getLanguage());
 
 export function t(key: I18nKey, vars?: Record<string, string | number>): string {
 	let s = dict[key] ?? en[key];

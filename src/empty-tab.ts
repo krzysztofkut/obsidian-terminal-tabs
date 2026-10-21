@@ -14,7 +14,7 @@ function textNodes(root: Node): Text[] {
 /** Native actions of Obsidian's empty "New tab" page, without ours. */
 function nativeActions(list: HTMLElement): HTMLElement[] {
 	return Array.from(list.children).filter(
-		(el): el is HTMLElement => el instanceof HTMLElement && !el.hasClass(EMPTY_ACTION_CLS),
+		(el): el is HTMLElement => el.instanceOf(HTMLElement) && !el.hasClass(EMPTY_ACTION_CLS),
 	);
 }
 
@@ -96,7 +96,7 @@ export function createEmptyTabAction(list: HTMLElement, label: string, hotkey: s
 		onClick();
 	});
 	el.addEventListener('keydown', (e) => {
-		if ((e.key === 'Enter' || e.key === ' ') && !(el instanceof HTMLButtonElement)) {
+		if ((e.key === 'Enter' || e.key === ' ') && !el.instanceOf(HTMLButtonElement)) {
 			e.preventDefault();
 			onClick();
 		}

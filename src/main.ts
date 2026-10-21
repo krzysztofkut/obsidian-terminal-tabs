@@ -127,7 +127,7 @@ export default class VaultTerminalPlugin extends Plugin {
 	// -------------------------------------------------------------- settings
 
 	async loadSettings() {
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+		this.settings = Object.assign({}, DEFAULT_SETTINGS, (await this.loadData()) as Partial<VaultTerminalSettings> | null);
 		if (!Array.isArray(this.settings.profiles) || !this.settings.profiles.length) {
 			this.settings.profiles = detectProfiles();
 			this.settings.defaultProfile = this.settings.profiles[0]?.id ?? '';

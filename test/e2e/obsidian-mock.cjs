@@ -26,6 +26,8 @@ P.hide = function () { this.style.display = 'none'; };
 P.isShown = function () { return !!this.offsetParent; };
 P.setText = function (t) { this.textContent = t; };
 P.find = function (s) { return this.querySelector(s); };
+P.setCssStyles = function (styles) { Object.assign(this.style, styles); };
+Node.prototype.instanceOf = function (type) { return this instanceof type; };
 P.findAll = function (s) { return Array.from(this.querySelectorAll(s)); };
 Object.defineProperty(Node.prototype, 'doc', { get() { return this.ownerDocument || document; } });
 Object.defineProperty(Node.prototype, 'win', { get() { return (this.ownerDocument || document).defaultView; } });
@@ -98,7 +100,9 @@ class Setting {
 }
 function chain() { const inputEl = document.createElement('input'); const p = new Proxy({ inputEl }, { get: (t, k) => (k in t ? t[k] : () => p) }); return p; }
 
+const getLanguage = () => 'en';
+
 const Platform = { isMacOS: process.platform === 'darwin', isWin: process.platform === 'win32', isDesktop: true };
 
-module.exports = { setIcon, Menu, MenuItem, Scope, TAbstractFile, TFile, TFolder, FileSystemAdapter, normalizePath, Notice, Events,
+module.exports = { getLanguage, setIcon, Menu, MenuItem, Scope, TAbstractFile, TFile, TFolder, FileSystemAdapter, normalizePath, Notice, Events,
   Component, View, ItemView, MarkdownView, Plugin, PluginSettingTab, Setting, Platform, Modal, FuzzySuggestModal };

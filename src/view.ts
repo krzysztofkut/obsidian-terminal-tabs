@@ -86,7 +86,7 @@ export class TerminalView extends ItemView implements SessionHost {
 	}
 
 	async setState(state: unknown, result: ViewStateResult): Promise<void> {
-		if (!this.session && !this.closing) this.init((state ?? {}) as TerminalViewState);
+		if (!this.session && !this.closing) this.init(state ?? {});
 		await super.setState(state, result);
 	}
 
@@ -313,8 +313,8 @@ class RenameModal extends Modal {
 				.onClick(() => this.submit()),
 		);
 		window.setTimeout(() => {
-			(input as HTMLInputElement | null)?.focus();
-			(input as HTMLInputElement | null)?.select();
+			input?.focus();
+			input?.select();
 		}, 0);
 	}
 
