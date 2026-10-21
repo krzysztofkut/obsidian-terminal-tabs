@@ -297,7 +297,7 @@ export class TerminalSession {
 		if (data.includes('\r')) this.scheduleCwdRefresh();
 	}
 
-	/** Hotkeys modelled after the JetBrains terminal. Returning false stops xterm from handling the key. */
+	/** Terminal hotkeys. Returning false stops xterm from handling the key. */
 	private handleKey(ev: KeyboardEvent): boolean {
 		if (ev.type !== 'keydown') return true;
 		const key = ev.key;
@@ -315,7 +315,7 @@ export class TerminalSession {
 			void this.plugin.toggleTerminal();
 			return consume();
 		}
-		// Shift+F6: rename tab (JetBrains "Rename")
+		// Shift+F6: rename tab
 		if (key === 'F6' && ev.shiftKey && !ev.ctrlKey && !ev.metaKey && !ev.altKey) {
 			this.host.renameSession();
 			return consume();

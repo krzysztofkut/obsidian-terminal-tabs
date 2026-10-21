@@ -36,7 +36,6 @@ export default class VaultTerminalPlugin extends Plugin {
 			id: 'toggle',
 			name: t('cmdToggle'),
 			icon: 'terminal',
-			hotkeys: [{ modifiers: ['Alt'], key: 'F12' }],
 			callback: () => void this.toggleTerminal(),
 		});
 		this.addCommand({
@@ -233,7 +232,7 @@ export default class VaultTerminalPlugin extends Plugin {
 		return this.vaultPath();
 	}
 
-	/** "Local", "Local (2)"… unique across all terminal tabs, like JetBrains. */
+	/** "Local", "Local (2)"… unique across all terminal tabs. */
 	nextTerminalName(profileId: string): string {
 		const profile = this.getProfile(profileId);
 		const base = profile.id === this.settings.defaultProfile || profile.id === 'fallback' ? 'Local' : profile.name || 'Shell';
@@ -313,7 +312,7 @@ export default class VaultTerminalPlugin extends Plugin {
 		const base = this.findEditorLeaf() ?? ws.getMostRecentLeaf(ws.rootSplit);
 		if (loc === 'tab') return base ? this.leafNextTo(base) : ws.getLeaf('tab');
 
-		// bottom: split the editor area horizontally, terminal below (JetBrains tool window)
+		// bottom: split the editor area horizontally, terminal below
 		if (!base) return ws.getLeaf('tab');
 		const leaf = ws.createLeafBySplit(base, 'horizontal', false);
 		try {
@@ -348,7 +347,7 @@ export default class VaultTerminalPlugin extends Plugin {
 		return this.openTerminalInLeaf(leaf, opts);
 	}
 
-	/** Alt+F12: open/focus the terminal; when it is focused, go back to the editor. */
+	/** Toggle: open/focus the terminal; when it is focused, go back to the editor. */
 	async toggleTerminal() {
 		const view = this.findView();
 		if (!view) {
@@ -400,9 +399,8 @@ export default class VaultTerminalPlugin extends Plugin {
 			if (!(list instanceof HTMLElement)) return;
 			if (rebuild) list.querySelectorAll(`.${EMPTY_ACTION_CLS}`).forEach((el) => el.remove());
 			if (list.querySelector(`.${EMPTY_ACTION_CLS}`)) return;
-			const hotkey = Platform.isMacOS ? '⌥ F12' : 'Alt + F12';
 			const open = (profileId?: string) => () => void this.openTerminalInLeaf(leaf, { profileId });
-			createEmptyTabAction(list, t('openTerminal'), hotkey, open());
+			createEmptyTabAction(list, t('openTerminal'), null, open());
 			for (const p of this.settings.profiles.filter((p) => p.command.trim() && p.id !== this.settings.defaultProfile)) {
 				createEmptyTabAction(list, t('openTerminalWith', { name: p.name || p.command }), null, open(p.id));
 			}

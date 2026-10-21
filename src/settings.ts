@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { t } from './i18n';
 import { detectPython } from './pty';
+import { monospaceFont } from './theme';
 import type VaultTerminalPlugin from './main';
 
 export interface ShellProfile {
@@ -70,7 +71,7 @@ export function newId(): string {
 	return Math.random().toString(36).slice(2, 10);
 }
 
-/** Shells that exist on this machine, in the order JetBrains would offer them. */
+/** Shells that exist on this machine, in the order they are offered. */
 export function detectProfiles(): ShellProfile[] {
 	const out: ShellProfile[] = [];
 	const add = (name: string, command: string, args: string) => out.push({ id: newId(), name, command, args });
@@ -102,7 +103,7 @@ export function detectProfiles(): ShellProfile[] {
 		if (seen.has(path.basename(p)) || !exists(p)) return;
 		seen.add(path.basename(p));
 		const base = path.basename(p);
-		// Login shell, like JetBrains, so PATH from ~/.zprofile / ~/.bash_profile is loaded
+		// Login shell, so PATH from ~/.zprofile / ~/.bash_profile is loaded
 		// even when Obsidian was started from the Dock.
 		const args = base === 'fish' || base === 'zsh' || base === 'bash' || base === 'sh' ? '-l' : '';
 		add(base, p, args);
@@ -316,7 +317,7 @@ export class VaultTerminalSettingTab extends PluginSettingTab {
 			.setDesc(t('setFontFamilyDesc'))
 			.addText((tx) =>
 				tx
-					.setPlaceholder('JetBrains Mono, Menlo, monospace')
+					.setPlaceholder(monospaceFont(containerEl))
 					.setValue(s.fontFamily)
 					.onChange(async (v) => {
 						s.fontFamily = v;

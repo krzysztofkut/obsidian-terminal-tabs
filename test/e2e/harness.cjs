@@ -183,14 +183,14 @@ const key = (k, el) => el.dispatchEvent(new KeyboardEvent('keydown', mac
   plugin.settings.defaultProfile = 'test-bash';
   let v1, s1, bottom;
 
-  await test('commands registered (incl. Alt+F12 toggle)', async () => {
+  await test('commands registered (no default hotkeys)', async () => {
     const ids = plugin.commands.map((c) => c.id);
     for (const id of ['toggle', 'new-tab', 'new-tab-profile', 'new-editor-tab', 'open-in-active-folder', 'close-tab', 'rename-tab', 'run-selection']) assert(ids.includes(id), 'missing ' + id);
     const tog = plugin.commands.find((c) => c.id === 'toggle');
-    assert(tog.hotkeys[0].key === 'F12' && tog.hotkeys[0].modifiers[0] === 'Alt');
+    assert(!tog.hotkeys, 'toggle must not set a default hotkey');
   });
 
-  await test('Alt+F12 opens ONE Obsidian tab titled "Local" in a bottom group, shell in vault root', async () => {
+  await test('toggle opens ONE Obsidian tab titled "Local" in a bottom group, shell in vault root', async () => {
     await plugin.toggleTerminal();
     assert(terminals().length === 1, 'terminals=' + terminals().length);
     v1 = terminals()[0].view; s1 = v1.session; bottom = terminals()[0].parent;
@@ -332,8 +332,7 @@ const key = (k, el) => el.dispatchEvent(new KeyboardEvent('keydown', mac
     const leaf = bottom.children[bottom.children.length - 1];
     const items = Array.from(leaf.containerEl.querySelectorAll('.empty-state-action-list > *'));
     const texts = items.map((e) => e.textContent);
-    const hk = mac ? '⌥ F12' : 'Alt + F12';
-    assert(texts.join('|') === `Create new note (⌘ N)|Go to file (⌘ O)|Open terminal (${hk})|Open terminal: bash|Close`, texts.join('|'));
+    assert(texts.join('|') === `Create new note (⌘ N)|Go to file (⌘ O)|Open terminal|Open terminal: bash|Close`, texts.join('|'));
     const ours = items[2], native = items[0];
     assert(ours.tagName === native.tagName, 'tag ' + ours.tagName);
     assert(ours.className === native.className + ' vault-terminal-empty-action', ours.className + ' vs ' + native.className);
@@ -347,13 +346,12 @@ const key = (k, el) => el.dispatchEvent(new KeyboardEvent('keydown', mac
     const leaf = bottom.children[bottom.children.length - 1];
     const list = leaf.containerEl.querySelector('.empty-state-action-list');
     const items = Array.from(list.children);
-    const hk = mac ? '⌥ F12' : 'Alt + F12';
     const ours = items[2], profile = items[3], native = items[0];
     assert(items[4].textContent === 'Close', 'Close not last: ' + items.map((e) => e.textContent).join('|'));
     assert(ours.tagName === 'BUTTON' && profile.tagName === 'BUTTON', 'not buttons');
     assert(ours.className === native.className + ' vault-terminal-empty-action', ours.className);
     assert(ours.querySelector('.empty-state-action-label').textContent === 'Open terminal', 'label');
-    assert(ours.querySelector('.empty-state-action-hotkey').textContent === hk, 'hotkey ' + ours.querySelector('.empty-state-action-hotkey').textContent);
+    assert(!ours.querySelector('.empty-state-action-hotkey'), 'open terminal should have no hotkey badge');
     assert(ours.querySelector('.empty-state-action-icon svg').getAttribute('data-icon') === 'terminal', 'icon');
     assert(!ours.hasAttribute('data-action') && ours.getAttribute('aria-label') === 'Open terminal', 'attrs');
     assert(profile.querySelector('.empty-state-action-label').textContent === 'Open terminal: bash', 'profile label');

@@ -1,7 +1,7 @@
 import type { ITheme } from '@xterm/xterm';
 import type { ColorScheme } from './settings';
 
-// ANSI palettes modelled after the JetBrains Darcula / Light terminal schemes.
+// ANSI palettes for the dark / light terminal schemes.
 const DARK_ANSI = {
 	black: '#000000',
 	red: '#f0524f',
