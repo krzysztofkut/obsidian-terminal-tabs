@@ -8,7 +8,7 @@
     "dev": "node esbuild.config.mjs",
     "build": "tsc --noEmit && node esbuild.config.mjs production",
     "typecheck": "tsc --noEmit",
-    "test": "node test/pty-helper.test.mjs",
+    "test": "node test/pty-helper.test.mjs && node test/i18n.test.mjs",
     "install-plugin": "node scripts/install-to-vault.mjs",
     "test:e2e": "npx --yes electron@37 test/e2e/main.cjs"
   },

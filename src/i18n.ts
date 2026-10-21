@@ -1,6 +1,19 @@
 import * as obsidian from 'obsidian';
+import { de } from './locales/de';
+import { es } from './locales/es';
+import { fr } from './locales/fr';
+import { it } from './locales/it';
+import { ja } from './locales/ja';
+import { ko } from './locales/ko';
+import { pl } from './locales/pl';
+import { ptBR } from './locales/ptBR';
+import { ru } from './locales/ru';
+import { tr } from './locales/tr';
+import { uk } from './locales/uk';
+import { zh } from './locales/zh';
+import { zhTW } from './locales/zhTW';
 
-const en = {
+export const en = {
 	viewTitle: 'Terminal',
 	newTab: 'New terminal tab',
 	closeTab: 'Close tab',
@@ -107,110 +120,15 @@ const en = {
 
 export type I18nKey = keyof typeof en;
 
-const pl: Partial<Record<I18nKey, string>> = {
-	viewTitle: 'Terminal',
-	newTab: 'Nowa karta terminala',
-	closeTab: 'Zamknij kartę',
-	renameTab: 'Zmień nazwę karty',
-	duplicateTab: 'Duplikuj kartę',
-	copy: 'Kopiuj',
-	paste: 'Wklej',
-	selectAll: 'Zaznacz wszystko',
-	clear: 'Wyczyść bufor',
-	find: 'Znajdź',
-	findPlaceholder: 'Znajdź',
-	findPrev: 'Poprzednie (Shift+Enter)',
-	findNext: 'Następne (Enter)',
-	findCase: 'Uwzględnij wielkość liter',
-	findRegex: 'Wyrażenie regularne',
-	findClose: 'Zamknij (Esc)',
-	noMatches: 'Brak wyników',
-	restart: 'Uruchom ponownie',
-	processExited: 'Proces zakończył się z kodem {code}',
-	pressEnterToRestart: 'Enter – uruchom ponownie, Esc – zamknij kartę.',
-	pythonMissing:
-		'Vault Terminal potrzebuje Pythona 3 do utworzenia pseudoterminala. Zainstaluj go (np. `xcode-select --install` albo `brew install python`) lub podaj ścieżkę w ustawieniach wtyczki.',
-	pythonMissingWin:
-		'Vault Terminal potrzebuje Pythona 3 z pakietem "pywinpty" (python -m pip install pywinpty). Ścieżkę do Pythona możesz ustawić w ustawieniach wtyczki.',
-	openInTerminal: 'Otwórz w terminalu',
-	openTerminal: 'Otwórz terminal',
-	openTerminalWith: 'Otwórz terminal: {name}',
-	newTabWithProfile: 'Nowa karta terminala: {name}',
-	pickProfile: 'Profil powłoki…',
-	cmdNewTabProfile: 'Nowa karta terminala z profilem…',
-	cmdRenameTab: 'Zmień nazwę karty terminala',
-	setShowHeader: 'Pokazuj nagłówek widoku',
-	setShowHeaderDesc: 'Pasek z tytułem i menu ⋯ nad terminalem. Sama karta i tak pokazuje nazwę.',
+export type Locale = Partial<Record<I18nKey, string>>;
 
-	cmdToggle: 'Pokaż/ukryj terminal',
-	cmdNewTab: 'Nowa karta terminala',
-	cmdNewView: 'Otwórz terminal jako kartę edytora',
-	cmdActiveFolder: 'Otwórz terminal w folderze bieżącego pliku',
-	cmdCloseTab: 'Zamknij kartę terminala',
-	cmdClear: 'Wyczyść terminal',
-	cmdSendSelection: 'Uruchom zaznaczony tekst w terminalu',
-	cmdFocus: 'Przejdź do terminala',
+// Keys are Obsidian language codes, lower-case; a regional code falls back to its base language (pt-PT → pt).
+export const locales: Record<string, Locale> = { de, es, fr, it, ja, ko, pl, pt: ptBR, 'pt-br': ptBR, ru, tr, uk, zh, 'zh-tw': zhTW };
 
-	setShell: 'Powłoka',
-	setProfiles: 'Profile powłok',
-	setProfilesDesc: 'Powłoki dostępne w menu karty, na pustej nowej karcie i w komendzie „Nowa karta terminala z profilem”. Argumenty dzielone są jak w linii poleceń.',
-	setProfileName: 'Nazwa',
-	setProfileCommand: 'Polecenie',
-	setProfileArgs: 'Argumenty',
-	setAddProfile: 'Dodaj profil',
-	setResetProfiles: 'Przywróć wykryte profile',
-	setDeleteProfile: 'Usuń profil',
-	setDefaultProfile: 'Profil domyślny',
-	setDefaultProfileDesc: 'Używany przez „Pokaż/ukryj terminal”, Cmd/Ctrl+Shift+T i „Otwórz terminal”.',
-	setPython: 'Python',
-	setPythonDesc: 'Python 3 uruchamia mały mostek PTY. Puste = wykryj automatycznie.',
-	setPythonCheck: 'Sprawdź',
-	setPythonFound: 'Znaleziono Pythona {version}: {command}',
-	setPythonFoundNoWinpty: 'Znaleziono Pythona {version}, ale brakuje "pywinpty": {command} -m pip install pywinpty',
-	setPythonNotFound: 'Nie znaleziono Pythona 3.',
-	setEnv: 'Zmienne środowiskowe',
-	setEnvDesc: 'Jedna para KLUCZ=wartość w linii, dodawana do środowiska powłoki.',
-
-	setBehaviour: 'Zachowanie',
-	setStartDir: 'Katalog startowy',
-	setStartDirDesc: 'Katalog roboczy nowych kart.',
-	startVault: 'Główny folder sejfu',
-	startActive: 'Folder aktywnego pliku',
-	startCustom: 'Własny folder',
-	setCustomDir: 'Własny folder',
-	setCustomDirDesc: 'Ścieżka bezwzględna lub względna do sejfu.',
-	setLocation: 'Otwieraj terminal',
-	setLocationDesc: 'Gdzie otwiera się pierwszy terminal. Kolejne otwierają się jako karty obok niego.',
-	locBottom: 'Na dole',
-	locRight: 'W prawym panelu bocznym',
-	locTab: 'W nowej karcie',
-	setCloseOnExit: 'Zamykaj kartę po wyjściu z powłoki',
-	setCloseOnExitDesc: 'Po `exit` (kod 0) karta się zamyka. Inne kody zostawiają kartę otwartą.',
-	setCopyOnSelect: 'Kopiuj po zaznaczeniu',
-	setOverrideHotkeys: 'Terminal przejmuje skróty Obsidiana',
-	setOverrideHotkeysDesc:
-		'Gdy terminal ma fokus, klawisze trafiają do powłoki (Ctrl+P, Ctrl+W, Esc…). Alt+F12 nadal wraca do edytora.',
-	setMacOptionMeta: 'Option działa jako Meta (macOS)',
-	setMacOptionMetaDesc: 'Wyłącz, aby wpisywać ą, ę, ł itd. z klawiszem Option.',
-	setLinkFiles: 'Klikalne ścieżki plików z sejfu',
-	setLinkFilesDesc: 'Ścieżki notatek wypisane w terminalu (ls, grep, git status…) otwierają się w Obsidianie po Cmd/Ctrl+klik.',
-
-	setAppearance: 'Wygląd',
-	setFontFamily: 'Czcionka',
-	setFontFamilyDesc: 'Puste = czcionka monospace Obsidiana.',
-	setFontSize: 'Rozmiar czcionki',
-	setLineHeight: 'Wysokość linii',
-	setCursorStyle: 'Kursor',
-	cursorBlock: 'Blok',
-	cursorBar: 'Kreska',
-	cursorUnderline: 'Podkreślenie',
-	setCursorBlink: 'Migający kursor',
-	setScrollback: 'Linie historii (scrollback)',
-	setColors: 'Kolory',
-	colorsAuto: 'Zgodnie z motywem Obsidiana',
-	colorsDark: 'Ciemny',
-	colorsLight: 'Jasny',
-};
+export function pickLocale(lang: string): Locale {
+	const l = lang.toLowerCase();
+	return locales[l] ?? locales[l.split('-')[0]] ?? {};
+}
 
 function language(): string {
 	try {
@@ -222,7 +140,7 @@ function language(): string {
 	return window.localStorage.getItem('language') || 'en';
 }
 
-const dict: Partial<Record<I18nKey, string>> = language().startsWith('pl') ? pl : {};
+const dict = pickLocale(language());
 
 export function t(key: I18nKey, vars?: Record<string, string | number>): string {
 	let s = dict[key] ?? en[key];
