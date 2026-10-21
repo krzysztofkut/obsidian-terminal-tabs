@@ -60,12 +60,12 @@
 	background-color: transparent;
 }
 
-.terminal-tabs-session .xterm .xterm-helper-textarea {
-	/* Obsidian styles every textarea - keep xterm's hidden input invisible */
-	border: none !important;
-	box-shadow: none !important;
-	padding: 0 !important;
-	min-height: 0 !important;
+.terminal-tabs-session .xterm textarea.xterm-helper-textarea {
+	/* Obsidian styles every textarea - keep xterm's hidden input invisible (more specific than Obsidian's rules) */
+	border: none;
+	box-shadow: none;
+	padding: 0;
+	min-height: 0;
 }
 
 /* Find bar ------------------------------------------------------------------- */
@@ -128,11 +128,6 @@
 	flex: 1 1 auto;
 	width: auto;
 	font-family: var(--font-monospace);
-}
-
-.terminal-tabs-settings .terminal-tabs-mono {
-	font-family: var(--font-monospace);
-	width: 100%;
 }
 
 .terminal-tabs-python-status {

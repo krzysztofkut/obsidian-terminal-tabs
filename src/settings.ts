@@ -1,4 +1,4 @@
-import { App, PluginSettingTab, Setting } from 'obsidian';
+import { App, PluginSettingTab, Setting, SettingDefinitionItem } from 'obsidian';
 import * as fs from 'fs';
 import * as path from 'path';
 import { t } from './i18n';
@@ -117,95 +117,122 @@ export function detectProfiles(): ShellProfile[] {
 export class TerminalTabsSettingTab extends PluginSettingTab {
 	constructor(app: App, private plugin: TerminalTabsPlugin) {
 		super(app, plugin);
+		this.containerEl.addClass('terminal-tabs-settings');
 	}
 
-	private async save(refresh = true) {
+	/** Settings that change how open terminals look; the rest apply to new tabs. */
+	private static readonly LIVE = new Set<string>(['colorScheme', 'fontFamily', 'fontSize', 'lineHeight', 'cursorStyle', 'cursorBlink', 'showViewHeader', 'scrollback', 'copyOnSelect', 'overrideHotkeys', 'linkVaultFiles', 'macOptionIsMeta', 'closeOnExit']);
+
+	async setControlValue(key: string, value: unknown): Promise<void> {
+		const s = this.plugin.settings as unknown as Record<string, unknown>;
+		s[key] = value;
+		if (key === 'pythonPath') this.plugin.python = undefined;
+		await this.save(TerminalTabsSettingTab.LIVE.has(key));
+		if (key === 'startDir') this.update();
+	}
+
+	private async save(refresh: boolean) {
 		await this.plugin.saveSettings();
 		if (refresh) this.plugin.applySettingsToViews();
 	}
 
-	display(): void {
-		const { containerEl } = this;
+	getSettingDefinitions(): SettingDefinitionItem[] {
 		const s = this.plugin.settings;
-		containerEl.empty();
-		containerEl.addClass('terminal-tabs-settings');
+		const profileOptions = Object.fromEntries(s.profiles.map((p) => [p.id, p.name || p.command]));
+		return [
+			{
+				type: 'group',
+				heading: t('setShell'),
+				items: [
+					{ name: t('setDefaultProfile'), desc: t('setDefaultProfileDesc'), control: { type: 'dropdown', key: 'defaultProfile', options: profileOptions } },
+					{ name: t('setPython'), desc: t('setPythonDesc'), aliases: ['python3', 'pywinpty'], render: (setting) => this.renderPython(setting) },
+					{ name: t('setEnv'), desc: t('setEnvDesc'), control: { type: 'textarea', key: 'env', rows: 3 } },
+				],
+			},
+			{
+				type: 'list',
+				heading: t('setProfiles'),
+				emptyState: t('setProfilesDesc'),
+				items: s.profiles.map((profile) => ({ name: profile.name || profile.command, render: (setting: Setting) => this.renderProfile(setting, profile) })),
+				onDelete: (index) => void this.deleteProfile(index),
+				addItem: { name: t('setAddProfile'), action: () => void this.changeProfiles(() => s.profiles.push({ id: newId(), name: 'Shell', command: '', args: '' })) },
+				extraButtons: [
+					(b) =>
+						b
+							.setIcon('rotate-ccw')
+							.setTooltip(t('setResetProfiles'))
+							.onClick(() => void this.changeProfiles(() => {
+								s.profiles = detectProfiles();
+								s.defaultProfile = s.profiles[0]?.id ?? '';
+							})),
+				],
+			},
+			{
+				type: 'group',
+				heading: t('setBehaviour'),
+				items: [
+					{ name: t('setLocation'), desc: t('setLocationDesc'), control: { type: 'dropdown', key: 'location', options: { bottom: t('locBottom'), right: t('locRight'), tab: t('locTab') } } },
+					{ name: t('setStartDir'), desc: t('setStartDirDesc'), control: { type: 'dropdown', key: 'startDir', options: { vault: t('startVault'), activeFolder: t('startActive'), custom: t('startCustom') } } },
+					{ name: t('setCustomDir'), desc: t('setCustomDirDesc'), visible: () => s.startDir === 'custom', control: { type: 'text', key: 'customStartDir' } },
+					{ name: t('setCloseOnExit'), desc: t('setCloseOnExitDesc'), control: { type: 'toggle', key: 'closeOnExit' } },
+					{ name: t('setCopyOnSelect'), control: { type: 'toggle', key: 'copyOnSelect' } },
+					{ name: t('setOverrideHotkeys'), desc: t('setOverrideHotkeysDesc'), control: { type: 'toggle', key: 'overrideHotkeys' } },
+					{ name: t('setLinkFiles'), desc: t('setLinkFilesDesc'), control: { type: 'toggle', key: 'linkVaultFiles' } },
+					{ name: t('setMacOptionMeta'), desc: t('setMacOptionMetaDesc'), visible: process.platform === 'darwin', control: { type: 'toggle', key: 'macOptionIsMeta' } },
+				],
+			},
+			{
+				type: 'group',
+				heading: t('setAppearance'),
+				items: [
+					{ name: t('setColors'), control: { type: 'dropdown', key: 'colorScheme', options: { auto: t('colorsAuto'), dark: t('colorsDark'), light: t('colorsLight') } } },
+					{ name: t('setFontFamily'), desc: t('setFontFamilyDesc'), control: { type: 'text', key: 'fontFamily', placeholder: monospaceFont(this.containerEl) } },
+					{ name: t('setFontSize'), control: { type: 'slider', key: 'fontSize', min: 8, max: 28, step: 1 } },
+					{ name: t('setLineHeight'), control: { type: 'slider', key: 'lineHeight', min: 1, max: 2, step: 0.05 } },
+					{ name: t('setCursorStyle'), control: { type: 'dropdown', key: 'cursorStyle', options: { block: t('cursorBlock'), bar: t('cursorBar'), underline: t('cursorUnderline') } } },
+					{ name: t('setCursorBlink'), control: { type: 'toggle', key: 'cursorBlink' } },
+					{ name: t('setShowHeader'), desc: t('setShowHeaderDesc'), control: { type: 'toggle', key: 'showViewHeader' } },
+					{ name: t('setScrollback'), control: { type: 'number', key: 'scrollback', min: 0, max: 1_000_000, step: 1 } },
+				],
+			},
+		];
+	}
 
-		// ---------------------------------------------------------------- shell
-		new Setting(containerEl).setName(t('setShell')).setHeading();
+	/** Runs a change to the profile list, keeps the default profile valid and re-renders. */
+	private async changeProfiles(change: () => void) {
+		change();
+		const s = this.plugin.settings;
+		if (!s.profiles.some((p) => p.id === s.defaultProfile)) s.defaultProfile = s.profiles[0]?.id ?? '';
+		await this.save(false);
+		this.update();
+	}
 
-		new Setting(containerEl)
-			.setName(t('setDefaultProfile'))
-			.setDesc(t('setDefaultProfileDesc'))
-			.addDropdown((dd) => {
-				for (const p of s.profiles) dd.addOption(p.id, p.name || p.command);
-				dd.setValue(s.defaultProfile).onChange(async (v) => {
-					s.defaultProfile = v;
-					await this.save(false);
-				});
-			});
+	private async deleteProfile(index: number) {
+		const s = this.plugin.settings;
+		if (s.profiles.length <= 1) return; // at least one shell must stay
+		await this.changeProfiles(() => s.profiles.splice(index, 1));
+	}
 
-		new Setting(containerEl).setName(t('setProfiles')).setDesc(t('setProfilesDesc'));
-		for (const profile of s.profiles) {
-			const row = new Setting(containerEl).setClass('terminal-tabs-profile-row');
-			row.addText((tx) =>
-				tx
-					.setPlaceholder(t('setProfileName'))
-					.setValue(profile.name)
+	private renderProfile(setting: Setting, profile: ShellProfile) {
+		setting.setClass('terminal-tabs-profile-row');
+		const field = (placeholder: string, key: 'name' | 'command' | 'args', cls?: string) =>
+			setting.addText((tx) => {
+				if (cls) tx.inputEl.addClass(cls);
+				tx.setPlaceholder(placeholder)
+					.setValue(profile[key])
 					.onChange(async (v) => {
-						profile.name = v;
-						await this.save(false);
-					}),
-			);
-			row.addText((tx) => {
-				tx.inputEl.addClass('terminal-tabs-profile-command');
-				tx.setPlaceholder(t('setProfileCommand'))
-					.setValue(profile.command)
-					.onChange(async (v) => {
-						profile.command = v;
+						profile[key] = v;
 						await this.save(false);
 					});
 			});
-			row.addText((tx) =>
-				tx
-					.setPlaceholder(t('setProfileArgs'))
-					.setValue(profile.args)
-					.onChange(async (v) => {
-						profile.args = v;
-						await this.save(false);
-					}),
-			);
-			row.addExtraButton((b) =>
-				b
-					.setIcon('trash-2')
-					.setTooltip(t('setDeleteProfile'))
-					.setDisabled(s.profiles.length <= 1)
-					.onClick(async () => {
-						s.profiles = s.profiles.filter((p) => p !== profile);
-						if (s.defaultProfile === profile.id) s.defaultProfile = s.profiles[0]?.id ?? '';
-						await this.save(false);
-						this.display();
-					}),
-			);
-		}
-		new Setting(containerEl)
-			.addButton((b) =>
-				b.setButtonText(t('setAddProfile')).onClick(async () => {
-					s.profiles.push({ id: newId(), name: 'Shell', command: '', args: '' });
-					await this.save(false);
-					this.display();
-				}),
-			)
-			.addButton((b) =>
-				b.setButtonText(t('setResetProfiles')).onClick(async () => {
-					s.profiles = detectProfiles();
-					s.defaultProfile = s.profiles[0]?.id ?? '';
-					await this.save(false);
-					this.display();
-				}),
-			);
+		field(t('setProfileName'), 'name');
+		field(t('setProfileCommand'), 'command', 'terminal-tabs-profile-command');
+		field(t('setProfileArgs'), 'args');
+	}
 
-		const py = new Setting(containerEl).setName(t('setPython')).setDesc(t('setPythonDesc'));
-		const status = py.descEl.createDiv({ cls: 'terminal-tabs-python-status' });
+	private renderPython(setting: Setting) {
+		const s = this.plugin.settings;
+		const status = setting.descEl.createDiv({ cls: 'terminal-tabs-python-status' });
 		const check = () => {
 			const info = detectPython(s.pythonPath, this.plugin.baseEnv());
 			this.plugin.python = info;
@@ -220,169 +247,12 @@ export class TerminalTabsSettingTab extends PluginSettingTab {
 				status.addClass(noWinpty ? 'mod-warn' : 'mod-ok');
 			}
 		};
-		py.addText((tx) =>
+		setting.addText((tx) =>
 			tx
 				.setPlaceholder(process.platform === 'win32' ? 'py -3' : '/usr/bin/python3')
 				.setValue(s.pythonPath)
-				.onChange(async (v) => {
-					s.pythonPath = v;
-					this.plugin.python = undefined;
-					await this.save(false);
-				}),
+				.onChange((v) => void this.setControlValue('pythonPath', v)),
 		);
-		py.addButton((b) => b.setButtonText(t('setPythonCheck')).onClick(check));
-
-		new Setting(containerEl)
-			.setName(t('setEnv'))
-			.setDesc(t('setEnvDesc'))
-			.addTextArea((ta) => {
-				ta.inputEl.rows = 3;
-				ta.inputEl.addClass('terminal-tabs-mono');
-				ta.setValue(s.env)
-					.onChange(async (v) => {
-						s.env = v;
-						await this.save(false);
-					});
-			});
-
-		// ------------------------------------------------------------ behaviour
-		new Setting(containerEl).setName(t('setBehaviour')).setHeading();
-
-		new Setting(containerEl)
-			.setName(t('setLocation'))
-			.setDesc(t('setLocationDesc'))
-			.addDropdown((dd) =>
-				dd
-					.addOption('bottom', t('locBottom'))
-					.addOption('right', t('locRight'))
-					.addOption('tab', t('locTab'))
-					.setValue(s.location)
-					.onChange(async (v) => {
-						s.location = v as Location;
-						await this.save(false);
-					}),
-			);
-
-		new Setting(containerEl)
-			.setName(t('setStartDir'))
-			.setDesc(t('setStartDirDesc'))
-			.addDropdown((dd) =>
-				dd
-					.addOption('vault', t('startVault'))
-					.addOption('activeFolder', t('startActive'))
-					.addOption('custom', t('startCustom'))
-					.setValue(s.startDir)
-					.onChange(async (v) => {
-						s.startDir = v as StartDir;
-						await this.save(false);
-						this.display();
-					}),
-			);
-		if (s.startDir === 'custom') {
-			new Setting(containerEl)
-				.setName(t('setCustomDir'))
-				.setDesc(t('setCustomDirDesc'))
-				.addText((tx) =>
-					tx.setValue(s.customStartDir).onChange(async (v) => {
-						s.customStartDir = v;
-						await this.save(false);
-					}),
-				);
-		}
-
-		this.toggle(containerEl, 'setCloseOnExit', 'closeOnExit', 'setCloseOnExitDesc');
-		this.toggle(containerEl, 'setCopyOnSelect', 'copyOnSelect');
-		this.toggle(containerEl, 'setOverrideHotkeys', 'overrideHotkeys', 'setOverrideHotkeysDesc');
-		this.toggle(containerEl, 'setLinkFiles', 'linkVaultFiles', 'setLinkFilesDesc');
-		if (process.platform === 'darwin') this.toggle(containerEl, 'setMacOptionMeta', 'macOptionIsMeta', 'setMacOptionMetaDesc');
-
-		// ----------------------------------------------------------- appearance
-		new Setting(containerEl).setName(t('setAppearance')).setHeading();
-
-		new Setting(containerEl).setName(t('setColors')).addDropdown((dd) =>
-			dd
-				.addOption('auto', t('colorsAuto'))
-				.addOption('dark', t('colorsDark'))
-				.addOption('light', t('colorsLight'))
-				.setValue(s.colorScheme)
-				.onChange(async (v) => {
-					s.colorScheme = v as ColorScheme;
-					await this.save();
-				}),
-		);
-
-		new Setting(containerEl)
-			.setName(t('setFontFamily'))
-			.setDesc(t('setFontFamilyDesc'))
-			.addText((tx) =>
-				tx
-					.setPlaceholder(monospaceFont(containerEl))
-					.setValue(s.fontFamily)
-					.onChange(async (v) => {
-						s.fontFamily = v;
-						await this.save();
-					}),
-			);
-
-		new Setting(containerEl).setName(t('setFontSize')).addSlider((sl) =>
-			sl
-				.setLimits(8, 28, 1)
-				.setValue(s.fontSize)
-				.onChange(async (v) => {
-					s.fontSize = v;
-					await this.save();
-				}),
-		);
-
-		new Setting(containerEl).setName(t('setLineHeight')).addSlider((sl) =>
-			sl
-				.setLimits(1, 2, 0.05)
-				.setValue(s.lineHeight)
-				.onChange(async (v) => {
-					s.lineHeight = v;
-					await this.save();
-				}),
-		);
-
-		new Setting(containerEl).setName(t('setCursorStyle')).addDropdown((dd) =>
-			dd
-				.addOption('block', t('cursorBlock'))
-				.addOption('bar', t('cursorBar'))
-				.addOption('underline', t('cursorUnderline'))
-				.setValue(s.cursorStyle)
-				.onChange(async (v) => {
-					s.cursorStyle = v as TerminalTabsSettings['cursorStyle'];
-					await this.save();
-				}),
-		);
-		this.toggle(containerEl, 'setCursorBlink', 'cursorBlink');
-		this.toggle(containerEl, 'setShowHeader', 'showViewHeader', 'setShowHeaderDesc');
-
-		new Setting(containerEl).setName(t('setScrollback')).addText((tx) => {
-			tx.inputEl.type = 'number';
-			tx.setValue(String(s.scrollback)).onChange(async (v) => {
-				const n = Number(v);
-				if (Number.isFinite(n) && n >= 0) {
-					s.scrollback = Math.min(1_000_000, Math.round(n));
-					await this.save();
-				}
-			});
-		});
-	}
-
-	private toggle(
-		el: HTMLElement,
-		name: Parameters<typeof t>[0],
-		key: { [K in keyof TerminalTabsSettings]: TerminalTabsSettings[K] extends boolean ? K : never }[keyof TerminalTabsSettings],
-		desc?: Parameters<typeof t>[0],
-	) {
-		const st = new Setting(el).setName(t(name));
-		if (desc) st.setDesc(t(desc));
-		st.addToggle((tg) =>
-			tg.setValue(this.plugin.settings[key]).onChange(async (v) => {
-				this.plugin.settings[key] = v;
-				await this.save();
-			}),
-		);
+		setting.addButton((b) => b.setButtonText(t('setPythonCheck')).onClick(check));
 	}
 }

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Settings appear in Obsidian's settings search.
+
+### Changed
+- Shell profiles are an editable list: add, delete and restore the detected shells from the list header.
+
 ## [1.0.2] - 2026-10-21
 
 ### Changed

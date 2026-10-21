@@ -190,6 +190,17 @@ const key = (k, el) => el.dispatchEvent(new KeyboardEvent('keydown', mac
     assert(!tog.hotkeys, 'toggle must not set a default hotkey');
   });
 
+  await test('settings definitions point at real settings and every setting has a control', async () => {
+    const defs = plugin.settingTab.getSettingDefinitions();
+    const flat = defs.flatMap((d) => d.items ?? [d]);
+    const keys = flat.filter((d) => d.control).map((d) => d.control.key);
+    for (const k of keys) assert(k in plugin.settings, 'unknown setting ' + k);
+    // profiles have their own list, pythonPath its own row
+    const missing = Object.keys(plugin.settings).filter((k) => !keys.includes(k) && !['profiles', 'pythonPath'].includes(k));
+    assert(missing.length === 0, 'settings without a control: ' + missing.join(', '));
+    assert(defs.some((d) => d.type === 'list' && d.items.length === plugin.settings.profiles.length), 'one list row per profile');
+  });
+
   await test('toggle opens ONE Obsidian tab titled "Local" in a bottom group, shell in vault root', async () => {
     await plugin.toggleTerminal();
     assert(terminals().length === 1, 'terminals=' + terminals().length);
