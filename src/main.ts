@@ -1,4 +1,5 @@
 import { FileSystemAdapter, FuzzySuggestModal, MarkdownView, Notice, Platform, Plugin, TFile, TFolder, WorkspaceLeaf } from 'obsidian';
+import * as os from 'os';
 import * as path from 'path';
 import { t } from './i18n';
 import { PythonInfo, detectPython, ensureHelper } from './pty';
@@ -226,7 +227,7 @@ export default class TerminalTabsPlugin extends Plugin {
 			if (parent) return this.absPath(parent.path);
 		}
 		if (s.startDir === 'custom' && s.customStartDir.trim()) {
-			const p = s.customStartDir.trim().replace(/^~(?=$|[\\/])/, process.env.HOME || process.env.USERPROFILE || '~');
+			const p = s.customStartDir.trim().replace(/^~(?=$|[\\/])/, os.homedir());
 			return path.isAbsolute(p) ? p : path.join(this.vaultPath(), p);
 		}
 		return this.vaultPath();

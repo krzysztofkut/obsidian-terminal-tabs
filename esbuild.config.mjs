@@ -1,5 +1,5 @@
 import esbuild from 'esbuild';
-import builtins from 'builtin-modules';
+import { builtinModules as builtins } from 'node:module';
 import fs from 'node:fs';
 import path from 'node:path';
 
