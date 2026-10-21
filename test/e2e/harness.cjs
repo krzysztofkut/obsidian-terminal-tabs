@@ -377,6 +377,15 @@ const key = (k, el) => el.dispatchEvent(new KeyboardEvent('keydown', mac
     s1.closeFind();
   });
 
+  await test('emoji are 2 cells wide, so partial redraws of a status line land in place', async () => {
+    const write = (d) => new Promise((r) => s1.term.write(d, r));
+    // "📁 33%" redrawn as "📁 3%" by moving to column 4 and rewriting only the tail, as TUIs do
+    await write('\x1b[2J\x1b[H📁 33%\x1b[1;4H3% ');
+    const line = s1.term.buffer.active.getLine(s1.term.buffer.active.viewportY);
+    assert(line.getCell(0).getWidth() === 2, 'emoji width ' + line.getCell(0).getWidth());
+    assert(line.translateToString(true).trimEnd() === '📁 3%', 'line=' + JSON.stringify(line.translateToString(true)));
+  });
+
   // ---- screenshot of a realistic layout: three terminal tabs at the bottom
   const vDev = await plugin.newTerminal(); vDev.setName('npm run dev');
   const vGit = await plugin.newTerminal(); vGit.setName('git');

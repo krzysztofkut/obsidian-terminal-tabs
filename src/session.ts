@@ -2,6 +2,7 @@ import { Menu, Platform, Scope, TFile, normalizePath, setIcon } from 'obsidian';
 import { Terminal, IDisposable, ILink } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import { SearchAddon } from '@xterm/addon-search';
+import { Unicode11Addon } from '@xterm/addon-unicode11';
 import { WebLinksAddon } from '@xterm/addon-web-links';
 import { execFile } from 'child_process';
 import * as fs from 'fs';
@@ -86,7 +87,7 @@ export class TerminalSession {
 
 		const s = plugin.settings;
 		this.term = new Terminal({
-			allowProposedApi: false,
+			allowProposedApi: true, // needed by term.unicode
 			fontSize: s.fontSize,
 			fontFamily: s.fontFamily || monospaceFont(this.el),
 			lineHeight: s.lineHeight,
@@ -103,6 +104,10 @@ export class TerminalSession {
 		});
 		this.term.loadAddon(this.fit);
 		this.term.loadAddon(this.search);
+		// Emoji are 2 cells wide like in other terminals; with the default Unicode 6 widths, TUIs that redraw
+		// only changed cells (e.g. status lines) land one column off and leave stale characters.
+		this.term.loadAddon(new Unicode11Addon());
+		this.term.unicode.activeVersion = '11';
 		this.term.loadAddon(
 			new WebLinksAddon((ev, uri) => {
 				if (ev.metaKey || ev.ctrlKey) window.open(uri);
