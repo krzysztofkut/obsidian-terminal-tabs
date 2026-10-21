@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-10-21
+
 ### Added
 - Settings appear in Obsidian's settings search.
 
@@ -41,7 +43,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Colours that follow the Obsidian theme.
 - UI in 14 languages.
 
-[Unreleased]: https://github.com/krzysztofkut/obsidian-terminal-tabs/compare/1.0.2...HEAD
+[Unreleased]: https://github.com/krzysztofkut/obsidian-terminal-tabs/compare/1.1.0...HEAD
+[1.1.0]: https://github.com/krzysztofkut/obsidian-terminal-tabs/compare/1.0.2...1.1.0
 [1.0.2]: https://github.com/krzysztofkut/obsidian-terminal-tabs/compare/1.0.1...1.0.2
 [1.0.1]: https://github.com/krzysztofkut/obsidian-terminal-tabs/compare/1.0.0...1.0.1
 [1.0.0]: https://github.com/krzysztofkut/obsidian-terminal-tabs/releases/tag/1.0.0

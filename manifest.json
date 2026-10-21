@@ -1,7 +1,7 @@
 {
   "id": "terminal-tabs",
   "name": "Terminal Tabs",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "minAppVersion": "1.14.4",
   "description": "Open an integrated terminal with tabs in your vault.",
   "author": "Krzysztof Kut",
