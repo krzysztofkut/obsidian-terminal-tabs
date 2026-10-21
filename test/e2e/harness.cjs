@@ -176,7 +176,7 @@ const key = (k, el) => el.dispatchEvent(new KeyboardEvent('keydown', mac
   : { key: k, ctrlKey: true, shiftKey: true, bubbles: true, cancelable: true }));
 
 (async () => {
-  const plugin = new PluginClass(app, { id: 'vault-terminal', dir: '.obsidian/plugins/vault-terminal', version: '1.0.0' });
+  const plugin = new PluginClass(app, { id: 'vault-terminal', dir: '.obsidian/plugins/vault-terminal', version: '1.0.1' });
   await plugin.onload();
   // Test with a plain bash so user dotfiles don't affect the output
   plugin.settings.profiles.unshift({ id: 'test-bash', name: 'bash', command: '/bin/bash', args: '--norc --noprofile -i' });

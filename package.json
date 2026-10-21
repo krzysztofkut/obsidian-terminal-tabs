@@ -1,6 +1,6 @@
 {
   "name": "obsidian-vault-terminal",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Integrated terminal with tabs for Obsidian.",
   "main": "main.js",
   "private": true,

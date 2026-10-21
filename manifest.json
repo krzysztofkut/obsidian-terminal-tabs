@@ -1,7 +1,7 @@
 {
   "id": "vault-terminal",
   "name": "Vault Terminal",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "minAppVersion": "1.14.4",
   "description": "Open an integrated terminal with tabs in your vault.",
   "author": "Krzysztof Kut",
