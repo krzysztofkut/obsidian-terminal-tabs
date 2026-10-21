@@ -4,6 +4,8 @@ A terminal built into Obsidian, started in your vault folder, with many tabs at 
 
 Desktop only (macOS, Linux, Windows).
 
+![Vault Terminal: a note above, terminal tabs below](docs/screenshot.png)
+
 **Private by design.** Vault Terminal has no network access, no telemetry, no accounts and no ads. It collects nothing and sends nothing anywhere; everything runs locally on your computer. Details: [Privacy and system access](#privacy-and-system-access).
 
 ## Features
