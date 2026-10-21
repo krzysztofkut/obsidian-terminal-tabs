@@ -1,0 +1,34 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<style>
+body.theme-dark { --background-primary:#1e1e1e; --background-secondary:#262626; --background-modifier-border:#363636; --background-modifier-hover:rgba(255,255,255,.075);
+ --text-normal:#dadada; --text-muted:#b3b3b3; --text-faint:#666; --text-accent:#a68af9; --interactive-accent:#7f6df2; --text-selection:hsla(254,80%,68%,.33);
+ --font-monospace: 'DejaVu Sans Mono', 'Menlo', monospace; --font-ui-small:13px; --font-ui-smaller:12px; --radius-s:4px; --radius-m:8px; --size-4-1:4px; --text-on-accent:#fff; --shadow-s:0 2px 8px rgba(0,0,0,.4);
+ margin:0; background:var(--background-secondary); color:var(--text-normal); font-family: system-ui, sans-serif; font-size: 13px; height:100vh; display:flex; flex-direction:column; }
+/* very small imitation of Obsidian's tab groups */
+.workspace-tabs { display:flex; flex-direction:column; min-height:0; border-top: 1px solid var(--background-modifier-border) }
+.workspace-tabs.mod-editor { flex: 0 0 150px }
+.workspace-tabs.mod-bottom { flex: 1 1 auto }
+.workspace-tab-header-container { display:flex; gap:2px; height:36px; align-items:flex-end; padding: 0 8px; background:var(--background-secondary) }
+.workspace-tab-header { display:flex; align-items:center; gap:6px; height:30px; padding:0 12px; border-radius:6px 6px 0 0; color:var(--text-muted); cursor:pointer }
+.workspace-tab-header.is-active { background:var(--background-primary); color:var(--text-normal) }
+.workspace-tab-header-inner-icon { display:flex; color: var(--text-faint) } .workspace-tab-header-inner-icon svg { width:14px; height:14px }
+.workspace-tab-header-new { display:flex; align-items:center; height:30px; padding: 0 8px; color: var(--text-faint) }
+.workspace-tab-container { flex:1; display:flex; flex-direction:column; min-height:0; background:var(--background-primary) }
+.workspace-leaf { flex:1; display:flex; flex-direction:column; min-height:0 }
+.workspace-leaf-content { flex:1; display:flex; flex-direction:column; min-height:0 }
+.view-header { height: 0 }
+.view-content { flex:1; min-height:0 }
+.editor-mock { padding: 16px 24px; color:#999; line-height: 1.6 }
+.editor-mock h1 { font-size: 20px; color: var(--text-normal); margin: 0 0 6px }
+.empty-state-action-list { display:flex; flex-direction:column; align-items:flex-start; gap:8px; padding: 24px; color: var(--text-accent) }
+.empty-state-action { cursor: pointer }
+button.empty-state-action { display:flex; align-items:center; gap:8px; min-width: 260px; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--background-modifier-border); background: #2a2a2a; color: var(--text-normal); font: inherit }
+button.empty-state-action:hover { background: #333 }
+.empty-state-action-icon { display:flex; color: var(--text-muted) } .empty-state-action-icon svg { width:16px; height:16px }
+.empty-state-action-hotkey { margin-left:auto; font-size: 11px; color: var(--text-muted); background:#1e1e1e; border-radius:4px; padding: 1px 6px }
+.clickable-icon { display:flex; cursor:pointer; color: var(--text-muted); border-radius:4px }
+.clickable-icon svg { width:16px; height:16px }
+</style></head>
+<body class="theme-dark"><div id="app" style="flex:1;display:flex;flex-direction:column;min-height:0"></div>
+<script>require('./harness.cjs')</script></body></html>

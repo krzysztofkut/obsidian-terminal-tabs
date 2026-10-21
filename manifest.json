@@ -1,0 +1,10 @@
+{
+  "id": "vault-terminal",
+  "name": "Vault Terminal",
+  "version": "0.1.0",
+  "minAppVersion": "1.5.0",
+  "description": "Integrated terminal with tabs, opened in your vault. Inspired by the JetBrains terminal tool window.",
+  "author": "Krzysztof Kut",
+  "authorUrl": "https://github.com/krzysztofkut",
+  "isDesktopOnly": true
+}

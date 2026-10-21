@@ -1,0 +1,150 @@
+/* Layout ------------------------------------------------------------------ */
+
+.workspace-leaf-content[data-type='vault-terminal-view'] > .view-content.vault-terminal {
+	padding: 0;
+	overflow: hidden;
+}
+
+.vault-terminal {
+	--vt-bg: var(--background-primary);
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	background: var(--vt-bg);
+}
+
+.mod-sidedock .vault-terminal {
+	--vt-bg: var(--background-secondary);
+}
+
+/* The Obsidian tab already shows the terminal's name - hide the view header (optional). */
+.workspace-leaf-content.vault-terminal-leaf.vault-terminal-hide-header > .view-header {
+	display: none;
+}
+
+/* Obsidian tab header of a terminal ------------------------------------------ */
+
+.workspace-tab-header.vault-terminal-exited .workspace-tab-header-inner-title {
+	opacity: 0.55;
+	font-style: italic;
+}
+
+.workspace-tab-header-inner-title input.vault-terminal-tab-rename {
+	height: 20px;
+	padding: 0 4px;
+	font-size: inherit;
+	width: auto;
+	min-width: 0;
+}
+
+/* Terminal body --------------------------------------------------------------- */
+
+.vault-terminal-body {
+	position: relative;
+	flex: 1 1 auto;
+	min-height: 0;
+}
+
+.vault-terminal-session {
+	position: absolute;
+	inset: 0;
+	padding: 4px 0 0 8px;
+	background: var(--vt-bg);
+}
+
+.vault-terminal-session .xterm {
+	height: 100%;
+}
+
+.vault-terminal-session .xterm-viewport {
+	background-color: transparent;
+}
+
+.vault-terminal-session .xterm .xterm-helper-textarea {
+	/* Obsidian styles every textarea - keep xterm's hidden input invisible */
+	border: none !important;
+	box-shadow: none !important;
+	padding: 0 !important;
+	min-height: 0 !important;
+}
+
+/* Find bar ------------------------------------------------------------------- */
+
+.vault-terminal-find {
+	position: absolute;
+	top: 6px;
+	right: 18px;
+	z-index: 10;
+	display: flex;
+	align-items: center;
+	gap: 2px;
+	padding: 3px 4px;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-m);
+	background: var(--background-primary);
+	box-shadow: var(--shadow-s);
+}
+
+.vault-terminal-find input {
+	width: 180px;
+	height: 24px;
+	font-size: var(--font-ui-small);
+}
+
+.vault-terminal-find.mod-no-match input {
+	color: var(--text-error);
+	border-color: var(--background-modifier-error);
+}
+
+.vault-terminal-find .clickable-icon {
+	padding: 3px;
+}
+
+.vault-terminal-find .clickable-icon.is-active {
+	color: var(--text-on-accent);
+	background: var(--interactive-accent);
+}
+
+.vault-terminal-find svg {
+	width: 14px;
+	height: 14px;
+}
+
+/* Settings ------------------------------------------------------------------- */
+
+.vault-terminal-settings .vault-terminal-profile-row .setting-item-info {
+	display: none;
+}
+
+.vault-terminal-settings .vault-terminal-profile-row .setting-item-control {
+	justify-content: flex-start;
+}
+
+.vault-terminal-settings .vault-terminal-profile-row input[type='text'] {
+	width: 140px;
+}
+
+.vault-terminal-settings .vault-terminal-profile-row input.vault-terminal-profile-command {
+	flex: 1 1 auto;
+	width: auto;
+	font-family: var(--font-monospace);
+}
+
+.vault-terminal-settings .vault-terminal-mono {
+	font-family: var(--font-monospace);
+	width: 100%;
+}
+
+.vault-terminal-python-status {
+	margin-top: 4px;
+	font-family: var(--font-monospace);
+	font-size: var(--font-ui-smaller);
+}
+
+.vault-terminal-python-status.mod-ok {
+	color: var(--text-success);
+}
+
+.vault-terminal-python-status.mod-warn {
+	color: var(--text-warning);
+}
